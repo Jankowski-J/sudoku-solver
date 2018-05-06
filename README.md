@@ -13,9 +13,10 @@ Efficiency issues are side ones as of now.
 
 ### Input
 Each puzzle will be described as a JSON array of arrays (basically 9x9 matrix) and the output should be the same as well.
+Each subarray contains 9 numbers, 1 for each cell of a row. '0' means empty field.
 
 ## Implementation status
-- [ ] provide test cases
+- [x] provide test cases
 - [ ] C#
 - [ ] F#
 - [ ] JavaScript
