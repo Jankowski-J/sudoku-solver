@@ -5,4 +5,4 @@ script:
   - cd csharp
   - dotnet restore
   - dotnet build
-  - dotnet test
+  - dotnet test ./SudokuSolver.Lib.Tests/SudokuSolver.Lib.Tests.csproj
