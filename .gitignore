@@ -1,0 +1,5 @@
+/csharp/.vs
+/csharp/SudokuSolver.Lib/obj
+/csharp/SudokuSolver.Lib/bin
+/csharp/SudokuSolver.Lib.Tests/obj
+/csharp/SudokuSolver.Lib.Tests/bin
