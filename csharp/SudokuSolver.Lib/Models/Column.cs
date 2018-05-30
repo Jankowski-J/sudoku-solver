@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SudokuSolver.Lib.Models
 {
@@ -12,7 +10,7 @@ namespace SudokuSolver.Lib.Models
 
         public Cell GetCell(int index)
         {
-            return _cells[index];
+            return Cells[index];
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuSolver.Lib.Models
 {
-    public abstract class CellGroupBase
+    public abstract class CellGroupBase : IEnumerable<Cell>
     {
-        protected IList<Cell> _cells;
+        protected IList<Cell> Cells;
 
         protected CellGroupBase(ICollection<short> values)
         {
@@ -16,7 +17,22 @@ namespace SudokuSolver.Lib.Models
             if (values.Count != 9 || values.Any(x => x < 0) || values.Any(x => x > 9))
                 throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(values));
 
-            _cells = values.Select(x => new Cell(x)).ToList();
+            Cells = values.Select(x => new Cell(x)).ToList();
+        }
+
+        public IEnumerator<Cell> GetEnumerator()
+        {
+            return Cells.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public override string ToString()
+        {
+            return string.Join(" | ", Cells);
         }
     }
 }
