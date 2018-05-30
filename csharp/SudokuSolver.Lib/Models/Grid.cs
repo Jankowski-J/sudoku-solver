@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using SudokuSolver.Lib.Common;
 
 namespace SudokuSolver.Lib.Models
 {
@@ -11,28 +12,32 @@ namespace SudokuSolver.Lib.Models
 
     public class Grid : IGrid
     {
-        private const int SudokuSize = 9;
-
-        private readonly Row[] _rows;
-        private readonly Column[] _columns;
+        private Row[] _rows;
+        private Column[] _columns;
 
         protected Grid(short[,] matrix)
         {
             var length = matrix.GetLength(0);
             var width = matrix.GetLength(1);
 
-            if (length != SudokuSize || width != SudokuSize)
+            const short sudokuSize = Consts.SudokuGridSize;
+            if (length != sudokuSize || width != sudokuSize)
             {
                 throw new ArgumentException("Expected 9 x 9 matrix", nameof(matrix));
             }
 
-            _rows = new Row[SudokuSize];
-            _columns = new Column[SudokuSize];
+            InitializeRowsAndColumns(matrix, sudokuSize);
+        }
 
-            for (var len = 0; len < SudokuSize; len++)
+        private void InitializeRowsAndColumns(short[,] matrix, short sudokuSize)
+        {
+            _rows = new Row[sudokuSize];
+            _columns = new Column[sudokuSize];
+
+            for (var len = 0; len < sudokuSize; len++)
             {
-                var currentRow = new short[SudokuSize];
-                for (var wid = 0; wid < SudokuSize; wid++)
+                var currentRow = new short[sudokuSize];
+                for (var wid = 0; wid < sudokuSize; wid++)
                 {
                     currentRow[wid] = matrix[len, wid];
                 }
@@ -40,10 +45,10 @@ namespace SudokuSolver.Lib.Models
                 _rows[len] = new Row(currentRow);
             }
 
-            for (var wid = 0; wid < SudokuSize; wid++)
+            for (var wid = 0; wid < sudokuSize; wid++)
             {
-                var currentColumn = new short[SudokuSize];
-                for (var len = 0; len < SudokuSize; len++)
+                var currentColumn = new short[sudokuSize];
+                for (var len = 0; len < sudokuSize; len++)
                 {
                     currentColumn[len] = matrix[len, wid];
                 }
