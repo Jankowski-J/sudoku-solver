@@ -15,10 +15,16 @@ namespace SudokuSolver.Lib.Models
             if (values == null || !values.Any())
                 throw new ArgumentException("Non-empty collection is required", nameof(values));
 
-            if (values.Count != Consts.SudokuGridSize || values.Any(x => x < 0) || values.Any(x => x > Consts.SudokuGridSize))
+            if (HasInvalidSizeOrValues(values))
                 throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(values));
 
             Cells = values.Select(x => new Cell(x)).ToList();
+        }
+
+        private static bool HasInvalidSizeOrValues(ICollection<short> values)
+        {
+            return values.Count != Consts.SudokuGridSize || values.Any(x => x < 0) ||
+                   values.Any(x => x > Consts.SudokuGridSize);
         }
 
         public IEnumerator<Cell> GetEnumerator()

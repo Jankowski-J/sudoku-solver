@@ -23,7 +23,7 @@ namespace SudokuSolver.Lib.Models
             const short sudokuSize = Consts.SudokuGridSize;
             if (length != sudokuSize || width != sudokuSize)
             {
-                throw new ArgumentException("Expected 9 x 9 matrix", nameof(matrix));
+                throw new ArgumentException($"Expected {sudokuSize} x {sudokuSize} matrix", nameof(matrix));
             }
 
             InitializeRowsAndColumns(matrix, sudokuSize);
@@ -74,9 +74,9 @@ namespace SudokuSolver.Lib.Models
 
         public override string ToString()
         {
-            var mappedRows = _rows.Select(x => string.Join("|", x)).ToList();
+            var mappedRows = _rows.Select(x => x.ToString()).ToList();
 
-            return string.Join("\r\n", mappedRows);
+            return string.Join(Environment.NewLine, mappedRows);
         }
     }
 }
