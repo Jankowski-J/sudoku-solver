@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SudokuSolver.Lib.Common;
 
-namespace SudokuSolver.Lib.Models
+namespace SudokuSolver.Lib.Models.Abstract
 {
     public abstract class CellGroupBase : IEnumerable<Cell>
     {

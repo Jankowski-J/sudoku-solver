@@ -1,12 +1,25 @@
-﻿namespace SudokuSolver.Lib.Models
+﻿using System.Collections.Generic;
+using System.Linq;
+using SudokuSolver.Lib.Models.Abstract;
+
+namespace SudokuSolver.Lib.Models
 {
-    public class Cell
+    public class Cell : ICell
     {
-        public short Value { get; private set; }
+        public short Value { get; }
+        private IList<short> _availableValues;
 
         public Cell(short value = 0)
         {
             Value = value;
+            if(Value == 0)
+            {
+                _availableValues = Enumerable.Range(1, 9).Select(x => (short)x).ToList();
+            }
+            else
+            {
+                _availableValues = new List<short>().AsReadOnly();
+            }
         }
 
         public override string ToString()
@@ -23,13 +36,23 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Cell) obj);
         }
 
         public override int GetHashCode()
         {
             return Value.GetHashCode();
+        }
+
+        public ICollection<short> GetAvailableValues()
+        {
+            return _availableValues.ToList();
+        }
+
+        public bool MakeValueUnavailable(short value)
+        {
+            return _availableValues.Remove(value);
         }
     }
 }

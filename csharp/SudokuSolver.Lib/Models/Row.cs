@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SudokuSolver.Lib.Models.Abstract;
+using System.Collections.Generic;
 
 namespace SudokuSolver.Lib.Models
 {

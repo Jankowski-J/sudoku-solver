@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Linq;
 using SudokuSolver.Lib.Common;
+using SudokuSolver.Lib.Models.Abstract;
 
 namespace SudokuSolver.Lib.Models
 {
-    public interface IGrid
-    {
-        Row GetRow(int index);
-        Column GetColumn(int index);
-    }
-
     public class Grid : IGrid
     {
         private Row[] _rows;
