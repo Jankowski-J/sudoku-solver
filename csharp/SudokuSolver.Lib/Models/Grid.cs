@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using SudokuSolver.Lib.Common;
 using SudokuSolver.Lib.Models.Abstract;
@@ -42,13 +44,13 @@ namespace SudokuSolver.Lib.Models
 
             for (var wid = 0; wid < sudokuSize; wid++)
             {
-                var currentColumn = new short[sudokuSize];
+                var col = new List<ICell>();
                 for (var len = 0; len < sudokuSize; len++)
                 {
-                    currentColumn[len] = matrix[len, wid];
+                    col.Add(_rows[len].GetCell(wid));
                 }
 
-                _columns[wid] = new Column(currentColumn);
+                _columns[wid] = new Column(col);
             }
         }
 
@@ -67,11 +69,23 @@ namespace SudokuSolver.Lib.Models
             return new Grid(matrix);
         }
 
+        public IEnumerator<ICell> GetEnumerator()
+        {
+            var allCells = _rows.SelectMany(x => x);
+
+            return allCells.GetEnumerator();
+        }
+
         public override string ToString()
         {
             var mappedRows = _rows.Select(x => x.ToString()).ToList();
 
             return string.Join(Environment.NewLine, mappedRows);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
