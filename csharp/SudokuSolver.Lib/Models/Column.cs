@@ -9,7 +9,7 @@ namespace SudokuSolver.Lib.Models
         {
         }
 
-        public Cell GetCell(int index)
+        public ICell GetCell(int index)
         {
             return Cells[index];
         }

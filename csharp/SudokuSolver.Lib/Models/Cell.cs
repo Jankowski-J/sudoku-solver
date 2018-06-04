@@ -7,7 +7,7 @@ namespace SudokuSolver.Lib.Models
     public class Cell : ICell
     {
         public short Value { get; }
-        private IList<short> _availableValues;
+        private readonly List<short> _availableValues;
 
         public Cell(short value = 0)
         {
@@ -18,7 +18,7 @@ namespace SudokuSolver.Lib.Models
             }
             else
             {
-                _availableValues = new List<short>().AsReadOnly();
+                _availableValues = new List<short>();
             }
         }
 
@@ -53,6 +53,11 @@ namespace SudokuSolver.Lib.Models
         public bool MakeValueUnavailable(short value)
         {
             return _availableValues.Remove(value);
+        }
+
+        public void MakeValuesUnavailable(params short[] values)
+        {
+            _availableValues.RemoveAll(values.Contains);
         }
     }
 }

@@ -7,5 +7,6 @@ namespace SudokuSolver.Lib.Models.Abstract
         short Value { get; }
         ICollection<short> GetAvailableValues();
         bool MakeValueUnavailable(short value);
+        void MakeValuesUnavailable(params short[] values);
     }
 }

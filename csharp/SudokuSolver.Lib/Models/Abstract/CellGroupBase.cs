@@ -6,9 +6,9 @@ using SudokuSolver.Lib.Common;
 
 namespace SudokuSolver.Lib.Models.Abstract
 {
-    public abstract class CellGroupBase : IEnumerable<Cell>
+    public abstract class CellGroupBase : IEnumerable<ICell>
     {
-        protected IList<Cell> Cells;
+        protected IList<ICell> Cells;
 
         protected CellGroupBase(ICollection<short> values)
         {
@@ -18,7 +18,18 @@ namespace SudokuSolver.Lib.Models.Abstract
             if (HasInvalidSizeOrValues(values))
                 throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(values));
 
-            Cells = values.Select(x => new Cell(x)).ToList();
+            Cells = values.Select(x => CreateCell(values, x)).ToList();
+        }
+
+        private static ICell CreateCell(IEnumerable<short> allValues, short cellValue)
+        {
+            var cell = new Cell(cellValue);
+            if (cellValue != 0)
+            {
+                cell.MakeValuesUnavailable(allValues.ToArray());
+            }
+
+            return cell;
         }
 
         private static bool HasInvalidSizeOrValues(ICollection<short> values)
@@ -27,7 +38,7 @@ namespace SudokuSolver.Lib.Models.Abstract
                    values.Any(x => x > Consts.SudokuGridSize);
         }
 
-        public IEnumerator<Cell> GetEnumerator()
+        public IEnumerator<ICell> GetEnumerator()
         {
             return Cells.GetEnumerator();
         }
