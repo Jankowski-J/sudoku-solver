@@ -54,26 +54,29 @@ namespace SudokuSolver.Lib.Models
                 _columns[wid] = new Column(col);
             }
 
-            // TODO: initialize squares - with test cases
-            //var squareSize = sudokuSize / 3;
-            //_squares = new Square[squareSize,squareSize];
-            //for (var wid = 0; wid < squareSize; wid++)
-            //{
-            //    for (var len = 0; len < squareSize; len++)
-            //    {
-            //        var squareCells = new List<ICell>();
-            //        for (var x = 0; x < squareSize; x++)
-            //        {
-            //            for (var y = 0; y < squareSize; y++)
-            //            {
-            //                var row = _columns[len + y];
-            //                squareCells.Add(row.GetCell(x + wid));
-            //            }
-            //        }
-            //        var square = new Square(squareCells);
-            //        _squares[wid, len] = square;
-            //    }
-            //}
+            InitializeSquares(sudokuSize);
+        }
+
+        private void InitializeSquares(short sudokuSize)
+        {
+            var squareSize = sudokuSize / 3;
+            _squares = new Square[squareSize, squareSize];
+            for (var horizontalSide = 0; horizontalSide < squareSize; horizontalSide++)
+            {
+                for (var verticalSide = 0; verticalSide < squareSize; verticalSide++)
+                {
+                    var squareCells = new List<ICell>();
+                    for (var x = 0; x < squareSize; x++)
+                    {
+                        for (var y = 0; y < squareSize; y++)
+                        {
+                            var row = _columns[(verticalSide * squareSize) + y];
+                            squareCells.Add(row.GetCell((horizontalSide * squareSize) + x));
+                        }
+                    }
+                    _squares[horizontalSide, verticalSide] = new Square(squareCells);
+                }
+            }
         }
 
         public Column GetColumn(int index)

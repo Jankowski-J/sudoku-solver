@@ -11,7 +11,7 @@ namespace SudokuSolver.Lib.Tests.Models
         [Fact]
         public void TestDeserialization()
         {
-            var grid = GetStandardGrid();
+            var grid = GetEasyGrid();
             Assert.NotNull(grid);
         }
 
@@ -31,13 +31,12 @@ namespace SudokuSolver.Lib.Tests.Models
                 new Column(new short[] {0, 1, 0, 0, 7, 0, 0, 0, 0})
             };
 
-            var grid = GetStandardGrid();
+            var grid = GetEasyGrid();
 
             var allCorrect = columns.Select((column, index) =>
             {
                 var matchingColumn = grid.GetColumn(index);
-                var areEqual = matchingColumn.SequenceEqual(column);
-                return areEqual;
+                return matchingColumn.SequenceEqual(column);
             }).All(x => x);
 
             Assert.True(allCorrect);
@@ -59,19 +58,45 @@ namespace SudokuSolver.Lib.Tests.Models
                 new Row(new short[] {0, 1, 0, 0, 0, 2, 0, 8, 0})
             };
 
-            var grid = GetStandardGrid();
+            var grid = GetEasyGrid();
 
             var allCorrect = rows.Select((row, index) =>
             {
                 var matchingRow = grid.GetRow(index);
-                var areEqual = matchingRow.SequenceEqual(row);
-                return areEqual;
+                return matchingRow.SequenceEqual(row);
             }).All(x => x);
 
             Assert.True(allCorrect);
         }
 
-        private static Grid GetStandardGrid()
+        [Fact]
+        public void CheckSquares()
+        {
+            var squares = new List<Square>
+            {
+                new Square(new short[] {0, 2, 0, 0, 0, 0, 0, 7, 9}),
+                new Square(new short[] {6, 0, 0, 0, 5, 0, 0, 0, 0}),
+                new Square(new short[] {0, 7, 0, 9, 0, 1, 5, 0, 0}),
+                new Square(new short[] {0, 0, 0, 9, 0, 0, 0, 0, 8}),
+                new Square(new short[] {5, 6, 0, 4, 0, 3, 0, 2, 1}),
+                new Square(new short[] {4, 0, 0, 0, 0, 7, 0, 0, 0}),
+                new Square(new short[] {0, 0, 7, 6, 0, 3, 0, 1, 0}),
+                new Square(new short[] {0, 0, 0, 0, 9, 0, 0, 0, 2}),
+                new Square(new short[] {1, 3, 0, 0, 0, 0, 0, 8, 0})
+            };
+
+            var grid = GetEasyGrid(); 
+
+            var allCorrect = squares.Select((square, index) =>
+            {
+                var matchingSquare = grid.GetSquare(index / 3, index % 3);
+                return matchingSquare.SequenceEqual(square);
+            }).All(x => x);
+
+            Assert.True(allCorrect);
+        }
+
+        private static Grid GetEasyGrid()
         {
             const string rawGrid = @"[
                                 [0,2,0, 6,0,0, 0,7,0],
