@@ -31,7 +31,7 @@ namespace SudokuSolver.Lib.Models.Abstract
 
             Cells = cells.Select(x =>
             {
-                x.MakeValuesUnavailable(cells.Select(c => c.Value).ToArray());
+                x.MakeValuesUnavailable(cells.Where(c => c.Value > 0).Select(c => c.Value).ToArray());
                 return x;
             }).ToList();
         }
@@ -41,7 +41,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             var cell = new Cell(cellValue);
             if (cellValue == 0)
             {
-                cell.MakeValuesUnavailable(allValues.ToArray());
+                cell.MakeValuesUnavailable(allValues.Where(c => c > 0).ToArray());
             }
 
             return cell;

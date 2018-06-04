@@ -6,5 +6,6 @@ namespace SudokuSolver.Lib.Models.Abstract
     {
         Row GetRow(int index);
         Column GetColumn(int index);
+        Square GetSquare(int col, int row);
     }
 }

@@ -11,6 +11,7 @@ namespace SudokuSolver.Lib.Models
     {
         private Row[] _rows;
         private Column[] _columns;
+        private Square[,] _squares;
 
         protected Grid(short[,] matrix)
         {
@@ -23,10 +24,10 @@ namespace SudokuSolver.Lib.Models
                 throw new ArgumentException($"Expected {sudokuSize} x {sudokuSize} matrix", nameof(matrix));
             }
 
-            InitializeRowsAndColumns(matrix, sudokuSize);
+            InitializeSubContainers(matrix, sudokuSize);
         }
 
-        private void InitializeRowsAndColumns(short[,] matrix, short sudokuSize)
+        private void InitializeSubContainers(short[,] matrix, short sudokuSize)
         {
             _rows = new Row[sudokuSize];
             _columns = new Column[sudokuSize];
@@ -52,11 +53,37 @@ namespace SudokuSolver.Lib.Models
 
                 _columns[wid] = new Column(col);
             }
+
+            // TODO: initialize squares - with test cases
+            //var squareSize = sudokuSize / 3;
+            //_squares = new Square[squareSize,squareSize];
+            //for (var wid = 0; wid < squareSize; wid++)
+            //{
+            //    for (var len = 0; len < squareSize; len++)
+            //    {
+            //        var squareCells = new List<ICell>();
+            //        for (var x = 0; x < squareSize; x++)
+            //        {
+            //            for (var y = 0; y < squareSize; y++)
+            //            {
+            //                var row = _columns[len + y];
+            //                squareCells.Add(row.GetCell(x + wid));
+            //            }
+            //        }
+            //        var square = new Square(squareCells);
+            //        _squares[wid, len] = square;
+            //    }
+            //}
         }
 
         public Column GetColumn(int index)
         {
             return _columns[index];
+        }
+
+        public Square GetSquare(int col, int row)
+        {
+            return _squares[col, row];
         }
 
         public Row GetRow(int index)
