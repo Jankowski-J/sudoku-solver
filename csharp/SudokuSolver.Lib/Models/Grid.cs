@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SudokuSolver.Lib.Common;
 using SudokuSolver.Lib.Models.Abstract;
+using SudokuSolver.Lib.Models.Contexts;
 
 namespace SudokuSolver.Lib.Models
 {
@@ -34,24 +35,32 @@ namespace SudokuSolver.Lib.Models
 
             for (var len = 0; len < sudokuSize; len++)
             {
-                var currentRow = new short[sudokuSize];
+                var rowValues = new short[sudokuSize];
                 for (var wid = 0; wid < sudokuSize; wid++)
                 {
-                    currentRow[wid] = matrix[len, wid];
+                    rowValues[wid] = matrix[len, wid];
                 }
 
-                _rows[len] = new Row(currentRow);
+                var context = new RowConstructorContext()
+                {
+                    RowIndex = (short)len,
+                    Values = rowValues
+                };
+                _rows[len] = new Row(context);
             }
 
             for (var wid = 0; wid < sudokuSize; wid++)
             {
-                var col = new List<ICell>();
+                var columnCells = new List<ICell>();
                 for (var len = 0; len < sudokuSize; len++)
                 {
-                    col.Add(_rows[len].GetCell(wid));
+                    columnCells.Add(_rows[len].GetCell(wid));
                 }
-
-                _columns[wid] = new Column(col);
+                var context = new ColumnConstructorContext()
+                {
+                    Cells = columnCells
+                };
+                _columns[wid] = new Column(context);
             }
 
             InitializeSquares(sudokuSize);
@@ -74,7 +83,13 @@ namespace SudokuSolver.Lib.Models
                             squareCells.Add(row.GetCell((horizontalSide * squareSize) + x));
                         }
                     }
-                    _squares[horizontalSide, verticalSide] = new Square(squareCells);
+                    var context = new SquareConstructorContext
+                    {
+                        Cells =squareCells,
+                        ColumnIndex = (short)horizontalSide,
+                        RowIndex = (short)verticalSide
+                    };
+                    _squares[horizontalSide, verticalSide] = new Square(context);
                 }
             }
         }

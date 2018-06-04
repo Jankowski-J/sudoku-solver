@@ -10,7 +10,7 @@ namespace SudokuSolver.Lib.Tests.Models
         [Fact]
         public void Constructor_ForEmptyCollection_ShouldThrowArgumentException()
         {
-            Assert.Throws<ArgumentException>(() => new Row(new List<short>()));
+            Assert.Throws<ArgumentException>(() => new Row(new List<short>(), 0));
         }
 
         [Fact]
@@ -20,7 +20,7 @@ namespace SudokuSolver.Lib.Tests.Models
             {
                 5, 4, 9, 6
             };
-            Assert.Throws<ArgumentException>(() => new Row(nums));
+            Assert.Throws<ArgumentException>(() => new Row(nums, 0));
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace SudokuSolver.Lib.Tests.Models
             {
                 5, 4, 9, 6, 7, 0, 1, 2, 8, 3, 4, 5
             };
-            Assert.Throws<ArgumentException>(() => new Row(nums));
+            Assert.Throws<ArgumentException>(() => new Row(nums, 0));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace SudokuSolver.Lib.Tests.Models
             {
                 -1, 2, 3, 4, 5, 6, 7, 8, 11
             };
-            Assert.Throws<ArgumentException>(() => new Row(nums));
+            Assert.Throws<ArgumentException>(() => new Row(nums, 0));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace SudokuSolver.Lib.Tests.Models
             {
                 0, 2, 3, 4, 5, 6, 7, 8, 9
             };
-            var row = new Row(nums);
+            var row = new Row(nums, 0);
             Assert.NotNull(row);
         }
 
@@ -61,7 +61,7 @@ namespace SudokuSolver.Lib.Tests.Models
             {
                 0, 2, 3, 4, 5, 6, 7, 8, 9
             };
-            var row = new Row(nums);           
+            var row = new Row(nums, 0);           
             
             foreach(var num in nums)
             {

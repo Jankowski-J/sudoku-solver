@@ -3,31 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SudokuSolver.Lib.Common;
+using SudokuSolver.Lib.Models.Contexts;
 
 namespace SudokuSolver.Lib.Models.Abstract
 {
-    public abstract class CellGroupBase : IEnumerable<ICell>
+    public abstract class CellGroupBase<T> : IEnumerable<ICell> where T : ICellGroupConstructorContext
     {
         protected IList<ICell> Cells;
 
-        protected CellGroupBase(ICollection<short> values)
+        protected CellGroupBase(T context)
+        {
+            var values = context.Values;
+            ValidateValues(values);
+
+            Cells = InitializeCells(context);
+        }
+
+        protected static void ValidateValues(ICollection<short> values)
         {
             if (values == null || !values.Any())
                 throw new ArgumentException("Non-empty collection is required", nameof(values));
 
             if (HasInvalidSizeOrValues(values))
                 throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(values));
-
-            Cells = values.Select(x => CreateCell(values, x)).ToList();
         }
+
+        protected abstract IList<ICell> InitializeCells(T context);
 
         protected CellGroupBase(ICollection<ICell> cells)
         {
-            if (cells == null || !cells.Any())
-                throw new ArgumentException("Non-empty collection is required", nameof(cells));
-
-            if (HasInvalidSizeOrValues(cells))
-                throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(cells));
+            ValidateCells(cells);
 
             Cells = cells.Select(x =>
             {
@@ -36,9 +41,18 @@ namespace SudokuSolver.Lib.Models.Abstract
             }).ToList();
         }
 
-        private static ICell CreateCell(IEnumerable<short> allValues, short cellValue)
+        private static void ValidateCells(ICollection<ICell> cells)
         {
-            var cell = new Cell(cellValue);
+            if (cells == null || !cells.Any())
+                throw new ArgumentException("Non-empty collection is required", nameof(cells));
+
+            if (HasInvalidSizeOrValues(cells))
+                throw new ArgumentException("9 numbers are required in range of (0, 9)", nameof(cells));
+        }
+
+        protected ICell CreateCell(IEnumerable<short> allValues, short cellValue, short x = -1, short y = -1)
+        {
+            var cell = new Cell(cellValue, x, y);
             if (cellValue == 0)
             {
                 cell.MakeValuesUnavailable(allValues.Where(c => c > 0).ToArray());

@@ -20,15 +20,15 @@ namespace SudokuSolver.Lib.Tests.Models
         {
             var columns = new List<Column>
             {
-                new Column(new short[] {0, 0, 0, 0, 9, 0, 0, 6, 0}),
-                new Column(new short[] {2, 0, 7, 0, 0, 0, 0, 0, 1}),
-                new Column(new short[] {0, 0, 9, 0, 0, 8, 7, 3, 0}),
-                new Column(new short[] {6, 0, 0, 5, 4, 0, 0, 0, 0}),
-                new Column(new short[] {0, 5, 0, 6, 0, 2, 0, 9, 0}),
-                new Column(new short[] {0, 0, 0, 0, 3, 1, 0, 0, 2}),
-                new Column(new short[] {0, 9, 5, 4, 0, 0, 1, 0, 0}),
-                new Column(new short[] {7, 0, 0, 0, 0, 0, 3, 0, 8}),
-                new Column(new short[] {0, 1, 0, 0, 7, 0, 0, 0, 0})
+                new Column(new short[] {0, 0, 0, 0, 9, 0, 0, 6, 0}, 0),
+                new Column(new short[] {2, 0, 7, 0, 0, 0, 0, 0, 1}, 1),
+                new Column(new short[] {0, 0, 9, 0, 0, 8, 7, 3, 0}, 2),
+                new Column(new short[] {6, 0, 0, 5, 4, 0, 0, 0, 0}, 3),
+                new Column(new short[] {0, 5, 0, 6, 0, 2, 0, 9, 0}, 4),
+                new Column(new short[] {0, 0, 0, 0, 3, 1, 0, 0, 2}, 5),
+                new Column(new short[] {0, 9, 5, 4, 0, 0, 1, 0, 0}, 6),
+                new Column(new short[] {7, 0, 0, 0, 0, 0, 3, 0, 8}, 7),
+                new Column(new short[] {0, 1, 0, 0, 7, 0, 0, 0, 0}, 8)
             };
 
             var grid = GetEasyGrid();
@@ -47,15 +47,15 @@ namespace SudokuSolver.Lib.Tests.Models
         {
             var rows = new List<Row>
             {
-                new Row(new short[] {0, 2, 0, 6, 0, 0, 0, 7, 0}),
-                new Row(new short[] {0, 0, 0, 0, 5, 0, 9, 0, 1}),
-                new Row(new short[] {0, 7, 9, 0, 0, 0, 5, 0, 0}),
-                new Row(new short[] {0, 0, 0, 5, 6, 0, 4, 0, 0}),
-                new Row(new short[] {9, 0, 0, 4, 0, 3, 0, 0, 7}),
-                new Row(new short[] {0, 0, 8, 0, 2, 1, 0, 0, 0}),
-                new Row(new short[] {0, 0, 7, 0, 0, 0, 1, 3, 0}),
-                new Row(new short[] {6, 0, 3, 0, 9, 0, 0, 0, 0}),
-                new Row(new short[] {0, 1, 0, 0, 0, 2, 0, 8, 0})
+                new Row(new short[] {0, 2, 0, 6, 0, 0, 0, 7, 0}, 0),
+                new Row(new short[] {0, 0, 0, 0, 5, 0, 9, 0, 1}, 1),
+                new Row(new short[] {0, 7, 9, 0, 0, 0, 5, 0, 0}, 2),
+                new Row(new short[] {0, 0, 0, 5, 6, 0, 4, 0, 0}, 3),
+                new Row(new short[] {9, 0, 0, 4, 0, 3, 0, 0, 7}, 4),
+                new Row(new short[] {0, 0, 8, 0, 2, 1, 0, 0, 0}, 5),
+                new Row(new short[] {0, 0, 7, 0, 0, 0, 1, 3, 0}, 6),
+                new Row(new short[] {6, 0, 3, 0, 9, 0, 0, 0, 0}, 7),
+                new Row(new short[] {0, 1, 0, 0, 0, 2, 0, 8, 0}, 8)
             };
 
             var grid = GetEasyGrid();
@@ -74,18 +74,18 @@ namespace SudokuSolver.Lib.Tests.Models
         {
             var squares = new List<Square>
             {
-                new Square(new short[] {0, 2, 0, 0, 0, 0, 0, 7, 9}),
-                new Square(new short[] {6, 0, 0, 0, 5, 0, 0, 0, 0}),
-                new Square(new short[] {0, 7, 0, 9, 0, 1, 5, 0, 0}),
-                new Square(new short[] {0, 0, 0, 9, 0, 0, 0, 0, 8}),
-                new Square(new short[] {5, 6, 0, 4, 0, 3, 0, 2, 1}),
-                new Square(new short[] {4, 0, 0, 0, 0, 7, 0, 0, 0}),
-                new Square(new short[] {0, 0, 7, 6, 0, 3, 0, 1, 0}),
-                new Square(new short[] {0, 0, 0, 0, 9, 0, 0, 0, 2}),
-                new Square(new short[] {1, 3, 0, 0, 0, 0, 0, 8, 0})
+                new Square(new short[] {0, 2, 0, 0, 0, 0, 0, 7, 9}, 0, 0),
+                new Square(new short[] {6, 0, 0, 0, 5, 0, 0, 0, 0}, 0, 1),
+                new Square(new short[] {0, 7, 0, 9, 0, 1, 5, 0, 0}, 0, 2),
+                new Square(new short[] {0, 0, 0, 9, 0, 0, 0, 0, 8}, 1, 0),
+                new Square(new short[] {5, 6, 0, 4, 0, 3, 0, 2, 1}, 1, 1),
+                new Square(new short[] {4, 0, 0, 0, 0, 7, 0, 0, 0}, 1, 2),
+                new Square(new short[] {0, 0, 7, 6, 0, 3, 0, 1, 0}, 2, 0),
+                new Square(new short[] {0, 0, 0, 0, 9, 0, 0, 0, 2}, 2, 1),
+                new Square(new short[] {1, 3, 0, 0, 0, 0, 0, 8, 0}, 2, 2)
             };
 
-            var grid = GetEasyGrid(); 
+            var grid = GetEasyGrid();
 
             var allCorrect = squares.Select((square, index) =>
             {
