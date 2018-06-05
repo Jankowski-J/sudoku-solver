@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using SudokuSolver.Lib.Common;
+using SudokuSolver.Lib.Extensions;
 using SudokuSolver.Lib.Models.Abstract;
 using SudokuSolver.Lib.Models.Contexts;
 
@@ -41,7 +42,7 @@ namespace SudokuSolver.Lib.Models
                     rowValues[wid] = matrix[len, wid];
                 }
 
-                var context = new RowConstructorContext()
+                var context = new RowConstructorContext
                 {
                     RowIndex = (short)len,
                     Values = rowValues
@@ -102,6 +103,15 @@ namespace SudokuSolver.Lib.Models
         public Square GetSquare(int col, int row)
         {
             return _squares[col, row];
+        }
+
+        public IGrid UpdateCell(ICell cell)
+        {
+            var currentValues = _rows.Select(x => x.Select(c => c.Value).ToArray()).ToArray();
+            var matrix = currentValues.To2D();
+            matrix[cell.Y, cell.X] = cell.Value;
+    
+            return new Grid(matrix);
         }
 
         public Row GetRow(int index)

@@ -96,6 +96,36 @@ namespace SudokuSolver.Lib.Tests.Models
             Assert.True(allCorrect);
         }
 
+        [Fact]
+        public void UpdateCell_ShouldCreateCorrectGrid()
+        {
+            var rows = new List<Row>
+            {
+                new Row(new short[] {0, 2, 0, 6, 0, 0, 0, 7, 0}, 0),
+                new Row(new short[] {0, 0, 4, 0, 5, 0, 9, 0, 1}, 1),
+                new Row(new short[] {0, 7, 9, 0, 0, 0, 5, 0, 0}, 2),
+                new Row(new short[] {0, 0, 0, 5, 6, 0, 4, 0, 0}, 3),
+                new Row(new short[] {9, 0, 0, 4, 0, 3, 0, 0, 7}, 4),
+                new Row(new short[] {0, 0, 8, 0, 2, 1, 0, 0, 0}, 5),
+                new Row(new short[] {0, 0, 7, 0, 0, 0, 1, 3, 0}, 6),
+                new Row(new short[] {6, 0, 3, 0, 9, 0, 0, 0, 0}, 7),
+                new Row(new short[] {0, 1, 0, 0, 0, 2, 0, 8, 0}, 8)
+            };
+
+            var originalGrid = GetEasyGrid();
+            var updatedCell = new Cell(4, 2, 1);
+            var updatedGrid = originalGrid.UpdateCell(updatedCell);
+
+            var allCorrect = rows.Select((row, index) =>
+            {
+                var matchingRow = updatedGrid.GetRow(index);
+                var areEqual = matchingRow.SequenceEqual(row);
+                return areEqual;
+            }).All(x => x);
+
+            Assert.True(allCorrect);
+        }
+
         private static Grid GetEasyGrid()
         {
             const string rawGrid = @"[

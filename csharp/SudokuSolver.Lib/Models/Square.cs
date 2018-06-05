@@ -22,9 +22,9 @@ namespace SudokuSolver.Lib.Models
         {
         }
 
-        public ICell GetCell(int col, int row)
+        public ICell GetCell(int column, int row)
         {
-            return Cells[row * 3 + col];
+            return Cells[row * 3 + column];
         }
 
         protected override IList<ICell> InitializeCells(SquareConstructorContext context)

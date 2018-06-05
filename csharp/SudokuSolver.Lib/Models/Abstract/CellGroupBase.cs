@@ -47,17 +47,6 @@ namespace SudokuSolver.Lib.Models.Abstract
 
         protected abstract IList<ICell> InitializeCells(T context);
 
-        protected CellGroupBase(ICollection<ICell> cells)
-        {
-            ValidateCells(cells);
-
-            Cells = cells.Select(x =>
-            {
-                x.MakeValuesUnavailable(cells.Where(c => c.Value > 0).Select(c => c.Value).ToArray());
-                return x;
-            }).ToList();
-        }
-
         private static void ValidateCells(ICollection<ICell> cells)
         {
             if (cells == null || !cells.Any())
