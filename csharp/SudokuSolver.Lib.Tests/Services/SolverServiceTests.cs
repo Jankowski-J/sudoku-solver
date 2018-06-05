@@ -47,7 +47,7 @@ namespace SudokuSolver.Lib.Tests.Services
         }
 
         // Second test case is probably flawed
-        //[Fact]
+        [Fact]
         public void Solve_ForEasyGridTwo_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -57,7 +57,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.True(result.IsSuccess);
         }
         
-        //[Fact]
+        [Fact]
         public void Solve_ForEasyGridTwo_ShouldSolveWhole()
         {
             var solver = new SolverService();

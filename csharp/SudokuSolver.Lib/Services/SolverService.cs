@@ -31,7 +31,6 @@ namespace SudokuSolver.Lib.Services
 
                 if (context.GoToLoopStart)
                 {
-                    //ResetContext(context);
                     continue;
                 }
              
@@ -125,7 +124,6 @@ namespace SudokuSolver.Lib.Services
             context.IsSuccess = false;
             context.ContinueSolving = false;
             return true;
-
         }
 
         private static void SearchForPairsInColumns(SolvingContext context)
@@ -133,7 +131,7 @@ namespace SudokuSolver.Lib.Services
             foreach (var columnIndex in Enumerable.Range(0, 9))
             {
                 var column = context.Grid.GetColumn(columnIndex);
-                var combinations = GetValidPairsCombinations(column);
+                var combinations = GetValidPairsCombinations(column, context);
                 HandleCellPairs(context, combinations, column);
             }
         }
@@ -143,7 +141,7 @@ namespace SudokuSolver.Lib.Services
             foreach (var rowIndex in Enumerable.Range(0, 9))
             {
                 var row = context.Grid.GetRow(rowIndex);
-                var combinations = GetValidPairsCombinations(row);
+                var combinations = GetValidPairsCombinations(row, context);
                 HandleCellPairs(context, combinations, row);
             }
         }
@@ -155,13 +153,13 @@ namespace SudokuSolver.Lib.Services
                 foreach (var columnIndex in Enumerable.Range(0, 3))
                 {
                     var square = context.Grid.GetSquare(columnIndex, rowIndex);
-                    var combinations = GetValidPairsCombinations(square);
+                    var combinations = GetValidPairsCombinations(square, context);
                     HandleCellPairs(context, combinations, square);
                 }
             }
         }
 
-        private static IEnumerable<Tuple<ICell, ICell>> GetValidPairsCombinations(IEnumerable<ICell> cellGroup)
+        private static IEnumerable<Tuple<ICell, ICell>> GetValidPairsCombinations(IEnumerable<ICell> cellGroup, SolvingContext context)
         {
             var validGroups = cellGroup
                 .Where(x => x.GetAvailableValues().Count == 2)
@@ -172,7 +170,13 @@ namespace SudokuSolver.Lib.Services
                 .Where(tuple => tuple.Item1.X != tuple.Item2.X || tuple.Item1.Y != tuple.Item2.Y)
                 .Where(tuple => tuple.Item1.GetAvailableValues().SequenceEqual(tuple.Item2.GetAvailableValues()))
                 .ToList();
-            return combinations;
+
+            var derp = cellGroup.FirstOrDefault(x => !x.Equals(context.TargetCell)
+                                                     && x.GetAvailableValues()
+                                                         .SequenceEqual(context.TargetCell.GetAvailableValues()));
+            
+            yield return new Tuple<ICell, ICell>(context.TargetCell, derp);
+           // return combinations;
         }
 
         private static void HandleCellPairs<T>(SolvingContext context, IEnumerable<Tuple<ICell, ICell>> combinations,
