@@ -5,17 +5,21 @@ using System.Linq;
 
 namespace SudokuSolver.Lib.Models
 {
-    public class Column : CellGroupBase<ColumnConstructorContext>
+    public sealed class Column : CellGroupBase<ColumnConstructorContext>
     {
-        public Column(ColumnConstructorContext context) : base(context) { }
+        public Column(ColumnConstructorContext context) : base(context)
+        {
+            Cells = InitializeCells(context);
+        }
 
-        public Column(ICollection<short> values, short columnIndex) : base(
-          new ColumnConstructorContext
-          {
-              Values = values,
-              ColumnIndex = columnIndex
-          })
-        { }
+        public Column(ICollection<short> values, short columnIndex)
+            : this(new ColumnConstructorContext
+            {
+                Values = values,
+                ColumnIndex = columnIndex
+            })
+        {
+        }
 
         public ICell GetCell(int index)
         {
@@ -24,9 +28,17 @@ namespace SudokuSolver.Lib.Models
 
         protected override IList<ICell> InitializeCells(ColumnConstructorContext context)
         {
-            var cells = context.Values
-                .Select((x, i) => CreateCell(context.Values, x, context.ColumnIndex, (short)i))
-                .ToList();
+            IList<ICell> cells;
+            if(context.Values.Any())
+            {
+                cells = context.Values
+                    .Select((x, i) => CreateCell(context.Values, x, context.ColumnIndex, (short) i))
+                    .ToList();
+            }
+            else
+            {
+                cells = context.Cells.ToList();
+            }
 
             return cells;
         }

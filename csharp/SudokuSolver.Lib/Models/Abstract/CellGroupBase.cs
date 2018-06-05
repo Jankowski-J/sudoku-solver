@@ -13,10 +13,27 @@ namespace SudokuSolver.Lib.Models.Abstract
 
         protected CellGroupBase(T context)
         {
-            var values = context.Values;
-            ValidateValues(values);
+            ValidateContext(context);
+        }
 
-            Cells = InitializeCells(context);
+        protected static void ValidateContext(T context)
+        {
+            var hasValues = context.Values != null && context.Values.Any();
+            var hasValuesOrCells = hasValues || (context.Cells != null && context.Cells.Any());
+
+            if (!hasValuesOrCells)
+            {
+                throw new ArgumentException("Either Values or Cells have to be non-empty", nameof(context));
+            }
+
+            if (hasValues)
+            {
+                ValidateValues(context.Values);
+            }
+            else
+            {
+                ValidateCells(context.Cells);
+            }
         }
 
         protected static void ValidateValues(ICollection<short> values)

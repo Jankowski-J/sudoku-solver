@@ -56,7 +56,7 @@ namespace SudokuSolver.Lib.Models
                 {
                     columnCells.Add(_rows[len].GetCell(wid));
                 }
-                var context = new ColumnConstructorContext()
+                var context = new ColumnConstructorContext
                 {
                     Cells = columnCells
                 };
