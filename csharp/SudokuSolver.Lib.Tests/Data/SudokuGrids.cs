@@ -77,6 +77,54 @@ namespace SudokuSolver.Lib.Tests.Data
                 return grid;
             }
         }
+
+        public static IGrid EasyGridTwo
+        {
+            get
+            {
+                const string rawGrid = @"[
+                                [0,6,3, 9,0,0, 0,7,0],
+                                [0,0,0, 0,3,5, 8,2,0],
+                                [5,0,0, 0,0,0, 6,4,0],
+
+                                [0,0,0, 0,4,9, 0,3,0],
+                                [4,0,0, 0,0,0, 0,0,6],
+                                [0,3,0, 7,1,0, 0,0,0],
+
+                                [0,9,0, 0,0,0, 0,0,7],
+                                [0,5,8, 3,6,0, 0,0,0],
+                                [0,7,0, 0,0,2, 3,8,0]
+                             ]";
+
+                var matrix = JsonConvert.DeserializeObject<short[,]>(rawGrid);
+                var grid = Grid.FromSudokuMatrix(matrix);
+                return grid;
+            }
+        }
+
+        public static IGrid EasyGridTwoSolution
+        {
+            get
+            {
+                const string rawGrid = @"[
+                                [8,6,3, 9,2,4, 5,7,1],
+                                [1,4,7, 6,3,5, 8,2,9],
+                                [5,2,9, 8,7,1, 6,4,3],
+
+                                [7,8,6, 5,4,9, 1,3,2],
+                                [4,1,5, 2,8,3, 7,9,6],
+                                [9,3,2, 7,1,6, 4,5,8],
+
+                                [3,9,1, 4,5,8, 2,6,7],
+                                [2,5,8, 3,6,7, 9,1,4],
+                                [6,7,4, 1,9,2, 3,8,5]
+                             ]";
+
+                var matrix = JsonConvert.DeserializeObject<short[,]>(rawGrid);
+                var grid = Grid.FromSudokuMatrix(matrix);
+                return grid;
+            }
+        }
     }
 }
 

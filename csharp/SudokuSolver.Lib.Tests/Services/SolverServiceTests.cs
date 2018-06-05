@@ -27,7 +27,7 @@ namespace SudokuSolver.Lib.Tests.Services
         }
 
         [Fact]
-        public void Solve_ForEasyGrid_ShouldReturnSuccessStatus()
+        public void Solve_ForEasyGridOne_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
             var easyGrid = SudokuGrids.EasyGridOne;
@@ -37,13 +37,33 @@ namespace SudokuSolver.Lib.Tests.Services
         }
 
         [Fact]
-        public void Solve_ForEasyGrid_ShouldSolveWhole()
+        public void Solve_ForEasyGridOne_ShouldSolveWhole()
         {
             var solver = new SolverService();
             var easyGrid = SudokuGrids.EasyGridOne;
 
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridOneSolution, result.SudokuGrid);
+        }
+
+       // [Fact]
+        public void Solve_ForEasyGridTwo_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridTwo;
+
+            var result = solver.Solve(easyGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        //[Fact]
+        public void Solve_ForEasyGridTwo_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridTwo;
+
+            var result = solver.Solve(easyGrid);
+            Assert.Equal(SudokuGrids.EasyGridTwoSolution, result.SudokuGrid);
         }
     }
 }
