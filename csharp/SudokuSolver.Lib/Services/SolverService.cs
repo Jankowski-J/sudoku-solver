@@ -67,7 +67,6 @@ namespace SudokuSolver.Lib.Services
         {
             foreach (var square in context.Grid.GetSquares())
             {
-                var derp = square.Any(x => x.X == 2 && x.Y == 2);
                 SearchForSingleInGroup(context, square);
             }
             
@@ -109,7 +108,7 @@ namespace SudokuSolver.Lib.Services
             context.GoToLoopStart = true;
         }
 
-        private static bool SearchForPairs(SolvingContext context)
+        private bool SearchForPairs(SolvingContext context)
         {
             context.TargetCell = context.Grid.GetCellWithLeastAvailableValues();
 
@@ -143,7 +142,7 @@ namespace SudokuSolver.Lib.Services
             }
         }
 
-        private static void SearchForPairsInRows(SolvingContext context)
+        public void SearchForPairsInRows(SolvingContext context)
         {
             foreach (var rowIndex in Enumerable.Range(0, 9))
             {
@@ -168,11 +167,17 @@ namespace SudokuSolver.Lib.Services
 
         private static IEnumerable<Tuple<ICell, ICell>> GetValidPairsCombinations(IEnumerable<ICell> cellGroup, SolvingContext context)
         {
-            var tuple = cellGroup.FirstOrDefault(x => !x.Equals(context.TargetCell)
-                                                     && x.GetAvailableValues()
-                                                         .SequenceEqual(context.TargetCell.GetAvailableValues()));
-            
-            yield return new Tuple<ICell, ICell>(context.TargetCell, tuple);
+            var validGroups = cellGroup
+                .Where(x => x.GetAvailableValues().Count == 2)
+                .ToList();
+
+            var allTuples = validGroups.SelectMany(x => validGroups, Tuple.Create).ToList();
+            var combinations = allTuples
+                .Where(tuple => tuple.Item1.X != tuple.Item2.X || tuple.Item1.Y != tuple.Item2.Y)
+                .Where(tuple => tuple.Item1.GetAvailableValues().SequenceEqual(tuple.Item2.GetAvailableValues()))
+                .ToList();
+
+            return combinations;
         }
 
         private static void HandleCellPairs<T>(SolvingContext context, IEnumerable<Tuple<ICell, ICell>> combinations,
@@ -182,7 +187,7 @@ namespace SudokuSolver.Lib.Services
             {
                 if (combination.Item1 == null || combination.Item2 == null)
                     return;
-                
+
                 var firstFields = combination.Item1.GetAvailableValues().ToList();
                 var secondFields = combination.Item2.GetAvailableValues().ToList();
                 if (firstFields.Count != 2 || secondFields.Count != 2 ||
@@ -193,7 +198,7 @@ namespace SudokuSolver.Lib.Services
                     combination.Item1,
                     combination.Item2
                 };
-                var otherCells = cellGroup.Except(@group).ToList();
+                var otherCells = cellGroup.Except(group).ToList();
                 context.PairFound = true;
                 foreach (var otherCell in otherCells)
                 {

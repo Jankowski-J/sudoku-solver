@@ -1,4 +1,5 @@
-﻿using SudokuSolver.Lib.Services;
+﻿using SudokuSolver.Lib.Models.Contexts;
+using SudokuSolver.Lib.Services;
 using SudokuSolver.Lib.Tests.Data;
 using Xunit;
 
@@ -184,6 +185,63 @@ namespace SudokuSolver.Lib.Tests.Services
 
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridFourSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForHardGridOne_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.HardGridOne;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForHardGridOne_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.HardGridOne;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.HardGridOneSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForHardGridTwo_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.HardGridTwo;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForHardGridTwo_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.HardGridTwo;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.HardGridTwoSolution, result.SudokuGrid);
+        }
+
+        [Fact]
+        public void SearchForPairsInRow_SpecificCase_ShouldFindPair()
+        {
+            var solver = new SolverService();
+            var grid = SudokuGrids.SpecificCaseForPairInRow;
+
+            var context = new SolvingContext
+            {
+                ContinueSolving = true,
+                Grid = grid
+            };
+            
+            solver.SearchForPairsInRows(context);
+            
+            Assert.True(context.PairFound);
         }
     }
 }
