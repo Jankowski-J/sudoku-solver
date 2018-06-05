@@ -1,0 +1,8 @@
+language: csharp
+mono: none
+dotnet: 2.0.0
+script:
+  - cd csharp
+  - dotnet restore
+  - dotnet build
+  - dotnet test ./SudokuSolver.Lib.Tests/SudokuSolver.Lib.Tests.csproj
