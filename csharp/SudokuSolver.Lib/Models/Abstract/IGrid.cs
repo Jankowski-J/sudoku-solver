@@ -8,5 +8,7 @@ namespace SudokuSolver.Lib.Models.Abstract
         Column GetColumn(int index);
         Square GetSquare(int col, int row);
         IGrid UpdateCell(ICell cell);
+        bool HasEmptyCells();
+        ICell GetCellWithLeastAvailableValues();
     }
 }

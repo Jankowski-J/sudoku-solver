@@ -9,7 +9,7 @@ using SudokuSolver.Lib.Models.Contexts;
 
 namespace SudokuSolver.Lib.Models
 {
-    public class Grid : IGrid
+    public class Grid : IGrid, IEquatable<Grid>
     {
         private Row[] _rows;
         private Column[] _columns;
@@ -114,6 +114,19 @@ namespace SudokuSolver.Lib.Models
             return new Grid(matrix);
         }
 
+        public bool HasEmptyCells()
+        {
+            return this.Any(x => x.GetAvailableValues().Any());
+        }
+
+        public ICell GetCellWithLeastAvailableValues()
+        {
+            var cells = this.Where(x => x.GetAvailableValues().Any())
+                .OrderBy(x => x.GetAvailableValues().Count)
+                .ToList();
+            return cells.First();
+        }
+
         public Row GetRow(int index)
         {
             return _rows[index];
@@ -141,6 +154,32 @@ namespace SudokuSolver.Lib.Models
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public bool Equals(Grid other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(_rows, other._rows);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Grid) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (_rows != null ? _rows.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_columns != null ? _columns.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (_squares != null ? _squares.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

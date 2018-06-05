@@ -2,6 +2,8 @@
 using System.Linq;
 using Newtonsoft.Json;
 using SudokuSolver.Lib.Models;
+using SudokuSolver.Lib.Models.Abstract;
+using SudokuSolver.Lib.Tests.Data;
 using Xunit;
 
 namespace SudokuSolver.Lib.Tests.Models
@@ -90,7 +92,8 @@ namespace SudokuSolver.Lib.Tests.Models
             var allCorrect = squares.Select((square, index) =>
             {
                 var matchingSquare = grid.GetSquare(index / 3, index % 3);
-                return matchingSquare.SequenceEqual(square);
+                var areEqual = matchingSquare.SequenceEqual(square);
+                return areEqual;
             }).All(x => x);
 
             Assert.True(allCorrect);
@@ -126,25 +129,9 @@ namespace SudokuSolver.Lib.Tests.Models
             Assert.True(allCorrect);
         }
 
-        private static Grid GetEasyGrid()
+        private static IGrid GetEasyGrid()
         {
-            const string rawGrid = @"[
-                                [0,2,0, 6,0,0, 0,7,0],
-                                [0,0,0, 0,5,0, 9,0,1],
-                                [0,7,9, 0,0,0, 5,0,0],
-
-                                [0,0,0, 5,6,0, 4,0,0],
-                                [9,0,0, 4,0,3, 0,0,7],
-                                [0,0,8, 0,2,1, 0,0,0],
-
-                                [0,0,7, 0,0,0, 1,3,0],
-                                [6,0,3, 0,9,0, 0,0,0],
-                                [0,1,0, 0,0,2, 0,8,0]
-                             ]";
-
-            var matrix = JsonConvert.DeserializeObject<short[,]>(rawGrid);
-            var grid = Grid.FromSudokuMatrix(matrix);
-            return grid;
+            return SudokuGrids.EasyGridOne;
         }
     }
 }

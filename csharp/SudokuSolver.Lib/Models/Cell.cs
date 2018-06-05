@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using SudokuSolver.Lib.Models.Abstract;
 
 namespace SudokuSolver.Lib.Models
 {
-    public class Cell : ICell
+    [DebuggerDisplay("{Value} ({X}, {Y})")]
+    public class Cell : ICell, IComparable<Cell>
     {
         public short Value { get; }
 
@@ -32,25 +35,41 @@ namespace SudokuSolver.Lib.Models
 
         public override string ToString()
         {
-            return Value.ToString();
+            return $"{Value.ToString()}";
         }
 
         protected bool Equals(Cell other)
         {
-            return Value == other.Value;
+            return Value == other.Value && X == other.X && Y == other.Y;
+        }
+
+        public int CompareTo(ICell other)
+        {
+            return Value.CompareTo(other.Value);
+        }
+
+        public int CompareTo(Cell other)
+        {
+            return Value.CompareTo(other.Value);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
+            if (obj.GetType() != this.GetType()) return false;
             return Equals((Cell) obj);
         }
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode();
+            unchecked
+            {
+                var hashCode = Value.GetHashCode();
+                hashCode = (hashCode * 397) ^ X.GetHashCode();
+                hashCode = (hashCode * 397) ^ Y.GetHashCode();
+                return hashCode;
+            }
         }
 
         public ICollection<short> GetAvailableValues()
@@ -63,9 +82,9 @@ namespace SudokuSolver.Lib.Models
             return _availableValues.Remove(value);
         }
 
-        public void MakeValuesUnavailable(params short[] values)
+        public int MakeValuesUnavailable(params short[] values)
         {
-            _availableValues.RemoveAll(values.Contains);
+            return _availableValues.RemoveAll(values.Contains);
         }
     }
 }

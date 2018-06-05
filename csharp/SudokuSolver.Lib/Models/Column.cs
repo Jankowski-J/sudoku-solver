@@ -1,11 +1,12 @@
-﻿using SudokuSolver.Lib.Models.Abstract;
+﻿using System;
+using SudokuSolver.Lib.Models.Abstract;
 using SudokuSolver.Lib.Models.Contexts;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace SudokuSolver.Lib.Models
 {
-    public sealed class Column : CellGroupBase<ColumnConstructorContext>
+    public sealed class Column : CellGroupBase<ColumnConstructorContext>, IEquatable<Column>
     {
         public Column(ColumnConstructorContext context) : base(context)
         {
@@ -32,15 +33,33 @@ namespace SudokuSolver.Lib.Models
             if(context.Values.Any())
             {
                 cells = context.Values
-                    .Select((x, i) => CreateCell(context.Values, x, context.ColumnIndex, (short) i))
+                    .Select((value, index) => CreateCell(context.Values, value, context.ColumnIndex, (short) index))
                     .ToList();
             }
             else
             {
                 cells = context.Cells.ToList();
+                MakeCellsUnavailable(context, cells);
             }
 
             return cells;
+        }
+
+        public bool Equals(Column other)
+        {
+            return this.SequenceEqual(other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is Column && Equals((Column) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }

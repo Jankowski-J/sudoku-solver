@@ -93,5 +93,13 @@ namespace SudokuSolver.Lib.Models.Abstract
         {
             return string.Join(" | ", Cells);
         }
+
+        protected static void MakeCellsUnavailable(ICellGroupConstructorContext context, IList<ICell> cells)
+        {
+            foreach (var cell in cells)
+            {
+                cell.MakeValuesUnavailable(context.Cells.Select(x => x.Value).ToArray());
+            }
+        }
     }
 }
