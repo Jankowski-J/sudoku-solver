@@ -124,7 +124,22 @@ namespace SudokuSolver.Lib.Models
             var cells = this.Where(x => x.GetAvailableValues().Any())
                 .OrderBy(x => x.GetAvailableValues().Count)
                 .ToList();
-            return cells.First();
+            return cells.FirstOrDefault();
+        }
+
+        public IEnumerable<Square> GetSquares()
+        {
+            return _squares.Cast<Square>();
+        }
+
+        public IEnumerable<Column> GetColumns()
+        {
+            return _columns.ToList();
+        }
+
+        public IEnumerable<Row> GetRows()
+        {
+            return _rows.ToList();
         }
 
         public Row GetRow(int index)

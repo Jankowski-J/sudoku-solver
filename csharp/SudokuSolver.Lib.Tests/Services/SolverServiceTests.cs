@@ -46,7 +46,8 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.Equal(SudokuGrids.EasyGridOneSolution, result.SudokuGrid);
         }
 
-       // [Fact]
+        // Second test case is probably flawed
+        //[Fact]
         public void Solve_ForEasyGridTwo_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -55,7 +56,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.True(result.IsSuccess);
         }
-
+        
         //[Fact]
         public void Solve_ForEasyGridTwo_ShouldSolveWhole()
         {
@@ -64,6 +65,46 @@ namespace SudokuSolver.Lib.Tests.Services
 
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridTwoSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForEasyGridThree_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridThree;
+
+            var result = solver.Solve(easyGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForEasyGridThree_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridThree;
+
+            var result = solver.Solve(easyGrid);
+            Assert.Equal(SudokuGrids.EasyGridThreeSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForEasyGridFour_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridFour;
+
+            var result = solver.Solve(easyGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForEasyGridFour_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var easyGrid = SudokuGrids.EasyGridFour;
+
+            var result = solver.Solve(easyGrid);
+            Assert.Equal(SudokuGrids.EasyGridFourSolution, result.SudokuGrid);
         }
     }
 }

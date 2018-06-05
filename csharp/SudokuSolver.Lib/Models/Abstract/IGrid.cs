@@ -10,5 +10,8 @@ namespace SudokuSolver.Lib.Models.Abstract
         IGrid UpdateCell(ICell cell);
         bool HasEmptyCells();
         ICell GetCellWithLeastAvailableValues();
+        IEnumerable<Square> GetSquares();
+        IEnumerable<Column> GetColumns();
+        IEnumerable<Row> GetRows();
     }
 }

@@ -11,5 +11,6 @@ namespace SudokuSolver.Lib.Models.Abstract
         ICollection<short> GetAvailableValues();
         bool MakeValueUnavailable(short value);
         int MakeValuesUnavailable(params short[] values);
+        bool CanValueBePut(short value);
     }
 }

@@ -19,17 +19,22 @@ namespace SudokuSolver.Lib.Services
 
             while (context.ContinueSolving)
             {
-                context.UpdatedCellsCount = 0;
-                context.HasEmptyCells = context.Grid.HasEmptyCells();
+                ResetContext(context);
 
-                if (!context.HasEmptyCells)
+                if (!context.ContinueSolving)
                 {
-                    context.ContinueSolving = false;
+                    break;
+                }
+                if (SearchForPairs(context)) continue;
+                
+                SearchForSinglesInContainers(context);
+
+                if (context.GoToLoopStart)
+                {
+                    //ResetContext(context);
                     continue;
                 }
-
-                if (SearchForPairs(context)) continue;
-
+             
                 var updatedCell = new Cell(context.TargetCell.GetAvailableValues().First(), context.TargetCell.X,
                     context.TargetCell.Y);
                 context.Grid = context.Grid.UpdateCell(updatedCell);
@@ -42,25 +47,85 @@ namespace SudokuSolver.Lib.Services
             };
         }
 
+        private static void ResetContext(SolvingContext context)
+        {
+            context.UpdatedCellsCount = 0;
+            context.HasEmptyCells = context.Grid.HasEmptyCells();
+            context.GoToLoopStart = false;
+            if (!context.HasEmptyCells)
+            {
+                context.ContinueSolving = false;
+            }
+        }
+
+        private static void SearchForSinglesInContainers(SolvingContext context)
+        {
+            foreach (var square in context.Grid.GetSquares())
+            {
+                SearchForSingleInGroup(context, square);
+            }
+            
+            foreach (var column in context.Grid.GetColumns())
+            {
+                SearchForSingleInGroup(context, column);
+            }
+            
+            foreach (var row in context.Grid.GetRows())
+            {
+                SearchForSingleInGroup(context, row);
+            }
+        }
+
+        private static void SearchForSingleInGroup(SolvingContext context, ICellGroup group)
+        {
+            var allNumbers = Enumerable.Range(1, 9).Select(x => (short) x)
+                .Except(group.Select(x => x.Value).Distinct())
+                .ToList();
+
+            var singles = allNumbers.Select(x => new
+                {
+                    Value = x,
+                    ElligibleCellsCount = group.Count(y => y.CanValueBePut(x))
+                })
+                .Where(x => x.ElligibleCellsCount == 1)
+                .Select(x => x.Value)
+                .ToList();
+
+            var single = singles.FirstOrDefault();
+
+            if (single == 0) return;
+
+            var targetCell = group.FirstOrDefault(x => x.CanValueBePut(single));
+
+            if (targetCell == null) return;
+            var newCell = new Cell(single, targetCell.X, targetCell.Y);
+            context.Grid = context.Grid.UpdateCell(newCell);
+            context.GoToLoopStart = true;
+        }
+
         private static bool SearchForPairs(SolvingContext context)
         {
             context.TargetCell = context.Grid.GetCellWithLeastAvailableValues();
-            if (context.TargetCell.GetAvailableValues().Count > 1)
-            {
-                SearchForPairsInRows(context);
-                SearchForPairsInColumns(context);
-                SearchForPairsInSquares(context);
-                if (context.PairFound && context.UpdatedCellsCount > 0)
-                {
-                    return true;
-                }
 
-                context.IsSuccess = false;
-                context.ContinueSolving = false;
+            if (context.TargetCell == null)
+            {
+                return false;
+            }
+
+            if (context.TargetCell.GetAvailableValues().Count <= 1) return false;
+            
+            SearchForPairsInRows(context);
+            SearchForPairsInColumns(context);
+            SearchForPairsInSquares(context);
+            if (context.PairFound && context.UpdatedCellsCount > 0)
+            {
                 return true;
             }
 
-            return false;
+            context.IsSuccess = false;
+            context.ContinueSolving = false;
+            return true;
+
         }
 
         private static void SearchForPairsInColumns(SolvingContext context)

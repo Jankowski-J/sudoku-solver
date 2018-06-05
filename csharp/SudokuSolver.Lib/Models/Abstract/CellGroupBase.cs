@@ -7,7 +7,7 @@ using SudokuSolver.Lib.Models.Contexts;
 
 namespace SudokuSolver.Lib.Models.Abstract
 {
-    public abstract class CellGroupBase<T> : IEnumerable<ICell> where T : ICellGroupConstructorContext
+    public abstract class CellGroupBase<T> : ICellGroup where T : ICellGroupConstructorContext
     {
         protected IList<ICell> Cells;
 
@@ -16,7 +16,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             ValidateContext(context);
         }
 
-        protected static void ValidateContext(T context)
+        private static void ValidateContext(T context)
         {
             var hasValues = context.Values != null && context.Values.Any();
             var hasValuesOrCells = hasValues || (context.Cells != null && context.Cells.Any());
@@ -36,7 +36,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             }
         }
 
-        protected static void ValidateValues(ICollection<short> values)
+        private static void ValidateValues(ICollection<short> values)
         {
             if (values == null || !values.Any())
                 throw new ArgumentException("Non-empty collection is required", nameof(values));

@@ -20,14 +20,9 @@ namespace SudokuSolver.Lib.Models
         public Cell(short value = 0, short x = -1, short y = -1)
         {
             Value = value;
-            if(Value == 0)
-            {
-                _availableValues = Enumerable.Range(1, 9).Select(r => (short)r).ToList();
-            }
-            else
-            {
-                _availableValues = new List<short>();
-            }
+            _availableValues = Value == 0 
+                ? Enumerable.Range(1, 9).Select(r => (short) r).ToList() 
+                : new List<short>();
 
             X = x;
             Y = y;
@@ -85,6 +80,11 @@ namespace SudokuSolver.Lib.Models
         public int MakeValuesUnavailable(params short[] values)
         {
             return _availableValues.RemoveAll(values.Contains);
+        }
+
+        public bool CanValueBePut(short value)
+        {
+            return _availableValues.Contains(value);
         }
     }
 }

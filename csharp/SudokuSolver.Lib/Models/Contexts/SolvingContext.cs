@@ -11,5 +11,6 @@ namespace SudokuSolver.Lib.Models.Contexts
         public int UpdatedCellsCount { get; set; } = 0;
         public IGrid Grid { get; set; }
         public ICell TargetCell { get; set; }
+        public bool GoToLoopStart { get; set; } = false;
     }
 }
