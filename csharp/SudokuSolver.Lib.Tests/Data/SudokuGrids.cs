@@ -212,6 +212,52 @@ namespace SudokuSolver.Lib.Tests.Data
                 return grid;
             }
         }
+        
+        public static IGrid MediumGridOne
+        {
+            get
+            {
+                const string rawGrid = @"[
+                                [2,0,4, 0,0,0, 0,7,9],
+                                [0,0,0, 0,0,6, 0,8,5],
+                                [0,3,0, 0,0,0, 4,0,0],
+                                
+                                [9,0,0, 5,8,0, 0,4,0],
+                                [0,0,0, 0,0,0, 0,0,0],
+                                [0,6,0, 0,9,2, 0,0,7],
+                                
+                                [0,0,1, 0,0,0, 0,3,0],
+                                [6,2,0, 3,0,0, 0,0,0],
+                                [5,4,0, 0,0,0, 7,0,8]
+                             ]";
+
+                var grid = DeserializeGrid(rawGrid);
+                return grid;
+            }
+        }
+        
+        public static IGrid MediumGridOneSolution
+        {
+            get
+            {
+                const string rawGrid = @"[
+                                [2,5,4, 1,3,8, 6,7,9],
+                                [1,7,9, 2,4,6, 3,8,5],
+                                [8,3,6, 7,5,0, 4,2,1],
+                                
+                                [9,1,7, 5,8,3, 2,4,6],
+                                [4,8,2, 6,1,7, 9,5,3],
+                                [3,6,5, 4,9,2, 8,1,7],
+                                
+                                [7,9,1, 8,6,4, 5,3,2],
+                                [6,2,8, 3,7,5, 1,9,4],
+                                [5,4,3, 9,2,1, 7,6,8]
+                             ]";
+
+                var grid = DeserializeGrid(rawGrid);
+                return grid;
+            }
+        }
 
         private static Grid DeserializeGrid(string rawGrid)
         {

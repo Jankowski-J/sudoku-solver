@@ -106,5 +106,25 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridFourSolution, result.SudokuGrid);
         }
+        
+        //[Fact]
+        public void Solve_ForMediumGridOne_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridOne;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        //[Fact]
+        public void Solve_ForMediumGridOne_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridOne;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.MediumGridOneSolution, result.SudokuGrid);
+        }
     }
 }
