@@ -46,7 +46,6 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.Equal(SudokuGrids.EasyGridOneSolution, result.SudokuGrid);
         }
 
-        // Second test case is probably flawed
         [Fact]
         public void Solve_ForEasyGridTwo_ShouldReturnSuccessStatus()
         {
@@ -107,7 +106,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.Equal(SudokuGrids.EasyGridFourSolution, result.SudokuGrid);
         }
         
-        //[Fact]
+        [Fact]
         public void Solve_ForMediumGridOne_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -117,7 +116,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.True(result.IsSuccess);
         }
 
-        //[Fact]
+        [Fact]
         public void Solve_ForMediumGridOne_ShouldSolveWhole()
         {
             var solver = new SolverService();
@@ -125,6 +124,66 @@ namespace SudokuSolver.Lib.Tests.Services
 
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridOneSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForMediumGridTwo_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridTwo;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForMediumGridTwo_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridTwo;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.MediumGridTwoSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForMediumGridThree_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridThree;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForMediumGridThree_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridThree;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.MediumGridThreeSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForMediumGridFour_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridFour;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForMediumGridFour_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var mediumGrid = SudokuGrids.MediumGridFourSolution;
+
+            var result = solver.Solve(mediumGrid);
+            Assert.Equal(SudokuGrids.MediumGridFourSolution, result.SudokuGrid);
         }
     }
 }
