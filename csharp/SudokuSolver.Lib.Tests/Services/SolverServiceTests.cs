@@ -246,7 +246,49 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(hardGrid);
             Assert.Equal(SudokuGrids.HardGridThreeSolution, result.SudokuGrid);
         }
+        
+        [Fact]
+        public void Solve_ForHardGridFour_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var hardGrid = SudokuGrids.HardGridFour;
 
+            var result = solver.Solve(hardGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForHardGridFour_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var hardGrid = SudokuGrids.HardGridFour;
+
+            var result = solver.Solve(hardGrid);
+            Assert.Equal(SudokuGrids.HardGridFourSolution, result.SudokuGrid);
+        }
+        
+        [Fact(Skip = "Not yet solved")]
+        //[Fact]
+        public void Solve_ForExtremeGridOne_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridOne;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact(Skip = "Not yet solved")]
+        //[Fact]
+        public void Solve_ForExtremeGridOne_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridOne;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.Equal(SudokuGrids.ExtremeGridOneSolution, result.SudokuGrid);
+        }
+        
         [Fact]
         public void SearchForPairsInRow_SpecificCase_ShouldFindPair()
         {

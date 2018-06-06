@@ -55,17 +55,5 @@ namespace SudokuSolver.Lib.Models
         {
             return this.SequenceEqual(other);
         }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj is Square && Equals((Square) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
