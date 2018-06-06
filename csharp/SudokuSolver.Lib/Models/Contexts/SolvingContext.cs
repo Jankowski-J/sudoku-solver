@@ -1,4 +1,6 @@
-﻿using SudokuSolver.Lib.Models.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using SudokuSolver.Lib.Models.Abstract;
 
 namespace SudokuSolver.Lib.Models.Contexts
 {
@@ -12,5 +14,6 @@ namespace SudokuSolver.Lib.Models.Contexts
         public IGrid Grid { get; set; }
         public ICell TargetCell { get; set; }
         public bool GoToLoopStart { get; set; } = false;
+        public ICollection<Tuple<short, short>> Pairs = new List<Tuple<short, short>>();
     }
 }
