@@ -278,5 +278,26 @@ namespace SudokuSolver.Lib.Tests.Services
             
             Assert.True(context.PairFound);
         }
+        
+        [Fact]
+        public void SearchSingleNumbersInSquares_SpecificCase_ShouldCrossOut2InFourthRow()
+        {
+            var grid = SudokuGrids.SpecificCaseForPairInSquare;
+
+            var context = new SolvingContext
+            {
+                ContinueSolving = true,
+                Grid = grid
+            };
+            
+            SolverService.SearchSingleNumbersInSquares(context);
+            var updatedGrid = context.Grid;
+            var row = updatedGrid.GetRow(3);
+            var eigthCell = row.GetCell(7);
+            var ninthCell = row.GetCell(8);
+            
+            Assert.False(eigthCell.CanPutValue(2));
+            Assert.False(ninthCell.CanPutValue(2));
+        }
     }
 }

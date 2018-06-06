@@ -72,17 +72,17 @@ namespace SudokuSolver.Lib.Models
             return _availableValues.ToList();
         }
 
-        public bool MakeValueUnavailable(short value)
+        public bool CrossOutValue(short value)
         {
             return _availableValues.Remove(value);
         }
 
-        public int MakeValuesUnavailable(params short[] values)
+        public int CrossOutValues(params short[] values)
         {
             return _availableValues.RemoveAll(values.Contains);
         }
 
-        public bool CanValueBePut(short value)
+        public bool CanPutValue(short value)
         {
             return _availableValues.Contains(value);
         }

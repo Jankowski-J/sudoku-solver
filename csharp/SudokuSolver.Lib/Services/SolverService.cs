@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SudokuSolver.Lib.Common;
 using SudokuSolver.Lib.Extensions;
 using SudokuSolver.Lib.Models;
 using SudokuSolver.Lib.Models.Abstract;
@@ -13,10 +14,7 @@ namespace SudokuSolver.Lib.Services
     {
         public SolvingResult Solve(IGrid baseGrid)
         {
-            var context = new SolvingContext
-            {
-                Grid = baseGrid
-            };
+            var context = CreateContext(baseGrid);
 
             while (context.ContinueSolving)
             {
@@ -35,18 +33,35 @@ namespace SudokuSolver.Lib.Services
                 
                 var updatedCell = new Cell(availableValues.First(), targetCell.X, targetCell.Y);
                 context.Grid = context.Grid.UpdateCell(updatedCell);
+                context.FilledInCellsCount++;
             }
 
+            return ToSolvingResult(context);
+        }
+
+        private static SolvingResult ToSolvingResult(SolvingContext context)
+        {
             return new SolvingResult
             {
                 IsSuccess = context.IsSuccess,
-                SudokuGrid = context.Grid
+                SudokuGrid = context.Grid,
+                FilledInCellsCount = context.FilledInCellsCount
             };
+        }
+
+        private static SolvingContext CreateContext(IGrid baseGrid)
+        {
+            var context = new SolvingContext
+            {
+                Grid = baseGrid
+            };
+            ResetContext(context);
+            return context;
         }
 
         private static void ResetContext(SolvingContext context)
         {
-            context.UpdatedCellsCount = 0;
+            context.CellsAffectedWithCrossOut = 0;
             context.HasEmptyCells = context.Grid.HasEmptyCells();
             context.GoToLoopStart = false;
             context.Pairs = new List<Tuple<short, short>>();
@@ -58,10 +73,7 @@ namespace SudokuSolver.Lib.Services
 
         private static void SearchForSinglesInContainers(SolvingContext context)
         {
-            foreach (var square in context.Grid.GetSquares())
-            {
-                SearchForSingleInGroup(context, square);
-            }
+            SearchSingleNumbersInSquares(context);
             
             foreach (var column in context.Grid.GetColumns())
             {
@@ -71,6 +83,47 @@ namespace SudokuSolver.Lib.Services
             foreach (var row in context.Grid.GetRows())
             {
                 SearchForSingleInGroup(context, row);
+            }
+        }
+
+        public static void SearchSingleNumbersInSquares(SolvingContext context)
+        {
+            foreach (var square in context.Grid.GetSquares())
+            {
+                SearchForSingleInGroup(context, square);
+
+                var notFilledInNumbers = Enumerable.Range(1, 9)
+                    .Select(x => (short) x)
+                    .Except(square.Select(x => x.Value).Distinct())
+                    .ToList();
+
+                foreach (var number in notFilledInNumbers)
+                {
+                    var elligibleCells = square.Where(x => x.CanPutValue(number)).ToList();
+
+                    if (elligibleCells.Count != 2) continue;
+
+                    var first = elligibleCells.First();
+                    var second = elligibleCells.Last();
+
+                    if (first.X == second.X)
+                    {
+                        var column = context.Grid.GetColumn(first.X);
+                        var pairGroup = new List<ICell> {first, second};
+                        var otherCells = column.Except(pairGroup).ToList();
+                        var updatedCells = otherCells.Aggregate(0, (a, b) => a + (b.CrossOutValue(number) ? 1 : 0));
+                        context.CellsAffectedWithCrossOut += updatedCells;
+                    }
+
+                    if (first.Y == second.Y)
+                    {
+                        var row = context.Grid.GetRow(first.Y);
+                        var pairGroup = new List<ICell> {first, second};
+                        var otherCells = row.Except(pairGroup).ToList();
+                        var updatedCells = otherCells.Aggregate(0, (a, b) => a + (b.CrossOutValue(number) ? 1 : 0));
+                        context.CellsAffectedWithCrossOut += updatedCells;
+                    }
+                }
             }
         }
 
@@ -84,7 +137,7 @@ namespace SudokuSolver.Lib.Services
             var singles = allNumbers.Select(x => new
                 {
                     Value = x,
-                    ElligibleCellsCount = group.Count(y => y.CanValueBePut(x))
+                    ElligibleCellsCount = group.Count(y => y.CanPutValue(x))
                 })
                 .Where(x => x.ElligibleCellsCount == 1)
                 .Select(x => x.Value)
@@ -94,11 +147,12 @@ namespace SudokuSolver.Lib.Services
 
             if (single == 0) return;
 
-            var targetCell = group.FirstOrDefault(x => x.CanValueBePut(single));
+            var targetCell = group.FirstOrDefault(x => x.CanPutValue(single));
 
             if (targetCell == null) return;
             var newCell = new Cell(single, targetCell.X, targetCell.Y);
             context.Grid = context.Grid.UpdateCell(newCell);
+            context.FilledInCellsCount++;
             context.GoToLoopStart = true;
         }
 
@@ -112,7 +166,7 @@ namespace SudokuSolver.Lib.Services
             SearchForPairsInColumns(context);
             SearchForPairsInSquares(context);
             
-            if (context.PairFound && context.UpdatedCellsCount > 0) return true;
+            if (context.PairFound && context.CellsAffectedWithCrossOut > 0) return true;
 
             context.IsSuccess = false;
             context.ContinueSolving = false;
@@ -121,7 +175,7 @@ namespace SudokuSolver.Lib.Services
 
         private static void SearchForPairsInColumns(SolvingContext context)
         {
-            foreach (var columnIndex in Enumerable.Range(0, 9))
+            foreach (var columnIndex in Enumerable.Range(0, Consts.SudokuGridSize))
             {
                 var column = context.Grid.GetColumn(columnIndex);
                 var combinations = GetValidPairsCombinations(column);
@@ -131,7 +185,7 @@ namespace SudokuSolver.Lib.Services
 
         public static void SearchForPairsInRows(SolvingContext context)
         {
-            foreach (var rowIndex in Enumerable.Range(0, 9))
+            foreach (var rowIndex in Enumerable.Range(0, Consts.SudokuGridSize))
             {
                 var row = context.Grid.GetRow(rowIndex);
                 var combinations = GetValidPairsCombinations(row);
@@ -141,9 +195,9 @@ namespace SudokuSolver.Lib.Services
 
         public static void SearchForPairsInSquares(SolvingContext context)
         {
-            foreach (var rowIndex in Enumerable.Range(0, 3))
+            foreach (var rowIndex in Enumerable.Range(0, Consts.SudokuSquareSideSize))
             {
-                foreach (var columnIndex in Enumerable.Range(0, 3))
+                foreach (var columnIndex in Enumerable.Range(0, Consts.SudokuSquareSideSize))
                 {
                     var square = context.Grid.GetSquare(columnIndex, rowIndex);
                     var combinations = GetValidPairsCombinations(square);
@@ -154,7 +208,7 @@ namespace SudokuSolver.Lib.Services
             }
         }
 
-        private static void ApplyPairsToRowsAndColumns(SolvingContext context, List<Tuple<ICell, ICell>> pairs)
+        private static void ApplyPairsToRowsAndColumns(SolvingContext context, IEnumerable<Tuple<ICell, ICell>> pairs)
         {
             foreach (var pair in pairs)
             {
@@ -180,10 +234,12 @@ namespace SudokuSolver.Lib.Services
             Tuple<ICell, ICell> pair)
         {
             var otherCells = cellGroup.Except(pair.ToList()).ToList();
+            var firstFields = pair.Item1.GetAvailableValues().ToList();
+            context.Pairs.Add(Tuple.Create(firstFields.First(), firstFields.Last()));
             context.PairFound = true;
             foreach (var otherCell in otherCells)
             {
-                context.UpdatedCellsCount += otherCell.MakeValuesUnavailable(pair.Item1.GetAvailableValues().ToArray());
+                context.CellsAffectedWithCrossOut += otherCell.CrossOutValues(firstFields.ToArray());
             }
         }
 
@@ -217,7 +273,6 @@ namespace SudokuSolver.Lib.Services
                 if (firstFields.Count != 2 || secondFields.Count != 2 ||
                     !firstFields.SequenceEqual(secondFields)) continue;
 
-                context.Pairs.Add(Tuple.Create(firstFields.First(), firstFields.Last()));
                 CrossOutValues(context, cellGroup, combination);
 
                 yield return combination;

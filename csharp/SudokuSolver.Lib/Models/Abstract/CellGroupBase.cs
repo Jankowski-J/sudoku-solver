@@ -61,7 +61,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             var cell = new Cell(cellValue, x, y);
             if (cellValue == 0)
             {
-                cell.MakeValuesUnavailable(allValues.Where(c => c > 0).ToArray());
+                cell.CrossOutValues(allValues.Where(c => c > 0).ToArray());
             }
 
             return cell;
@@ -98,7 +98,7 @@ namespace SudokuSolver.Lib.Models.Abstract
         {
             foreach (var cell in cells)
             {
-                cell.MakeValuesUnavailable(context.Cells.Select(x => x.Value).ToArray());
+                cell.CrossOutValues(context.Cells.Select(x => x.Value).ToArray());
             }
         }
     }
