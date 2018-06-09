@@ -117,13 +117,13 @@ namespace SudokuSolver.Lib.Models
 
         public bool HasEmptyCells()
         {
-            return this.Any(x => x.GetAvailableValues().Any());
+            return this.Any(x => x.GetCandidates().Any());
         }
 
         public ICell GetCellWithLeastAvailableValues()
         {
-            var cells = this.Where(x => x.GetAvailableValues().Any())
-                .OrderBy(x => x.GetAvailableValues().Count)
+            var cells = this.Where(x => x.GetCandidates().Any())
+                .OrderBy(x => x.GetCandidates().Count)
                 .ToList();
             return cells.FirstOrDefault();
         }
@@ -141,6 +141,20 @@ namespace SudokuSolver.Lib.Models
         public IEnumerable<Row> GetRows()
         {
             return _rows.ToList();
+        }
+
+        public IEnumerable<Square> GetSquaresInRow(int rowIndex)
+        {
+            yield return _squares[rowIndex, 0];
+            yield return _squares[rowIndex, 1];
+            yield return _squares[rowIndex, 2];
+        }
+
+        public IEnumerable<Square> GetSquaresInColumn(int columnIndex)
+        {
+            yield return _squares[0, columnIndex];
+            yield return _squares[1, columnIndex];
+            yield return _squares[2, columnIndex];
         }
 
         public Row GetRow(int index)

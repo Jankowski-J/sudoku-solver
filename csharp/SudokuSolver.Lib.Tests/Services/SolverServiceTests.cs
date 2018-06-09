@@ -228,6 +228,7 @@ namespace SudokuSolver.Lib.Tests.Services
         }
         
         [Fact(Skip = "Not yet solved")]
+        //[Fact]
         public void Solve_ForHardGridThree_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -238,6 +239,7 @@ namespace SudokuSolver.Lib.Tests.Services
         }
 
         [Fact(Skip = "Not yet solved")]
+        //[Fact]
         public void Solve_ForHardGridThree_ShouldSolveWhole()
         {
             var solver = new SolverService();
@@ -338,8 +340,8 @@ namespace SudokuSolver.Lib.Tests.Services
             var eigthCell = row.GetCell(7);
             var ninthCell = row.GetCell(8);
             
-            Assert.False(eigthCell.CanPutValue(2));
-            Assert.False(ninthCell.CanPutValue(2));
+            Assert.False(eigthCell.CanPutCandidate(2));
+            Assert.False(ninthCell.CanPutCandidate(2));
         }
     }
 }

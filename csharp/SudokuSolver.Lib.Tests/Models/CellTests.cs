@@ -12,7 +12,7 @@ namespace SudokuSolver.Lib.Tests.Models
             var cell = new Cell(0);
 
             var expected = new List<short> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            var actual = cell.GetAvailableValues();
+            var actual = cell.GetCandidates();
 
             Assert.Equal(expected, actual);
         }
@@ -23,7 +23,7 @@ namespace SudokuSolver.Lib.Tests.Models
             var cell = new Cell(5);
 
             var expected = new List<short>();
-            var actual = cell.GetAvailableValues();
+            var actual = cell.GetCandidates();
 
             Assert.Equal(expected, actual);
         }

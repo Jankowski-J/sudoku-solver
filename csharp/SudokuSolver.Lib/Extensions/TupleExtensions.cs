@@ -9,5 +9,10 @@ namespace SudokuSolver.Lib.Extensions
         {
             return new List<T> { tuple.Item1, tuple.Item2 };
         }
+        
+        public static T[] ToArray<T>(this Tuple<T, T> tuple)
+        {
+            return new T[]{ tuple.Item1, tuple.Item2 };
+        }
     }
 }

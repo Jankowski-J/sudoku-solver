@@ -8,9 +8,10 @@ namespace SudokuSolver.Lib.Models.Abstract
         short Value { get; }
         short X { get; }
         short Y { get; }
-        ICollection<short> GetAvailableValues();
-        bool CrossOutValue(short value);
-        int CrossOutValues(params short[] values);
-        bool CanPutValue(short value);
+        ICollection<short> GetCandidates();
+        bool RemoveCandidate(short candidate);
+        int RemoveCandidates(params short[] candidates);
+        int RemoveCandidatesExcept(params short[] candidatesToBeUntouched);
+        bool CanPutCandidate(short candidate);
     }
 }

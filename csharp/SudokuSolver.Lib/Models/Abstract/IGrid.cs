@@ -13,5 +13,7 @@ namespace SudokuSolver.Lib.Models.Abstract
         IEnumerable<Square> GetSquares();
         IEnumerable<Column> GetColumns();
         IEnumerable<Row> GetRows();
+        IEnumerable<Square> GetSquaresInRow(int rowIndex);
+        IEnumerable<Square> GetSquaresInColumn(int columnIndex);
     }
 }
