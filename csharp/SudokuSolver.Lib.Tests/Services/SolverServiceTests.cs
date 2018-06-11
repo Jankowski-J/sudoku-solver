@@ -227,8 +227,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.Equal(SudokuGrids.HardGridTwoSolution, result.SudokuGrid);
         }
 
-        [Fact(Skip = "Not yet solved")]
-        //[Fact]
+        [Fact]
         public void Solve_ForHardGridThree_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -278,8 +277,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.Equal(SudokuGrids.HardGridFourSolution, result.SudokuGrid);
         }
 
-        [Fact(Skip = "Not yet solved")]
-        //[Fact]
+        [Fact]
         public void Solve_ForExtremeGridOne_ShouldReturnSuccessStatus()
         {
             var solver = new SolverService();
@@ -289,8 +287,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.True(result.IsSuccess);
         }
 
-        [Fact(Skip = "Not yet solved")]
-        //[Fact]
+        [Fact]
         public void Solve_ForExtremeGridOne_ShouldSolveWhole()
         {
             var solver = new SolverService();
@@ -298,6 +295,66 @@ namespace SudokuSolver.Lib.Tests.Services
 
             var result = solver.Solve(extremeGrid);
             Assert.Equal(SudokuGrids.ExtremeGridOneSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForExtremeGridTwo_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridTwo;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForExtremeGridTwo_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridTwo;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.Equal(SudokuGrids.ExtremeGridTwoSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForExtremeGridThree_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridThree;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForExtremeGridThree_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridThree;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.Equal(SudokuGrids.ExtremeGridThreeSolution, result.SudokuGrid);
+        }
+        
+        [Fact]
+        public void Solve_ForExtremeGridFour_ShouldReturnSuccessStatus()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridFour;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.True(result.IsSuccess);
+        }
+
+        [Fact]
+        public void Solve_ForExtremeGridFour_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var extremeGrid = SudokuGrids.ExtremeGridFour;
+
+            var result = solver.Solve(extremeGrid);
+            Assert.Equal(SudokuGrids.ExtremeGridFourSolution, result.SudokuGrid);
         }
 
         [Fact]
