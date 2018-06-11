@@ -254,11 +254,10 @@ namespace SudokuSolver.Lib.Services
 
             var allSquareIndices = new short[] {0, 1, 2};
             SearchForPairsInSquareRows(context, allSquareIndices);
-
             SearchForPairsInSquareColumns(context, allSquareIndices);
         }
 
-        private static void SearchForPairsInSquareColumns(SolvingContext context, short[] allSquareIndices)
+        public static void SearchForPairsInSquareColumns(SolvingContext context, short[] allSquareIndices)
         {
             foreach (var columnIndex in Enumerable.Range(0, Consts.SudokuSquareSideSize))
             {
@@ -273,7 +272,9 @@ namespace SudokuSolver.Lib.Services
                             Value = number,
                             Columns =
                                 x.Where(c => c.CanPutCandidate(number))
-                                    .Select(c => c.X).Distinct()
+                                    .Select(c => c.X)
+                                    .Distinct()
+                                    .OrderBy(c => c)
                                     .ToList(),
                             RowIndex = (short) i
                         })
@@ -326,7 +327,9 @@ namespace SudokuSolver.Lib.Services
                             Value = number,
                             Rows =
                                 x.Where(c => c.CanPutCandidate(number))
-                                    .Select(c => c.X).Distinct()
+                                    .Select(c => c.Y)
+                                    .Distinct()
+                                    .OrderBy(r => r)
                                     .ToList(),
                             ColumnIndex = (short) i
                         })

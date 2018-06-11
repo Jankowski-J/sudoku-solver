@@ -511,6 +511,29 @@ namespace SudokuSolver.Lib.Tests.Data
                 return grid;
             }
         }
+
+        public static IGrid HardGridThreePartiallySolved
+        {
+            get
+            {
+                const string rawGrid = @"[
+                                [0,0,0, 3,0,0, 5,9,0],
+                                [5,0,3, 0,0,9, 7,0,1],
+                                [0,0,9, 0,1,0, 3,6,4],
+                                
+                                [0,7,0, 0,8,4, 9,0,0],
+                                [4,9,5, 0,3,6, 8,0,0],
+                                [3,0,0, 2,9,0, 0,4,0],
+                                
+                                [9,5,0, 0,7,0, 0,0,0],
+                                [8,0,0, 6,0,3, 2,0,9],
+                                [0,3,0, 9,0,1, 0,0,0]
+                             ]";
+
+                var grid = DeserializeGrid(rawGrid);
+                return grid;
+            }
+        }
         
         public static IGrid HardGridThreeSolution
         {
@@ -526,7 +549,7 @@ namespace SudokuSolver.Lib.Tests.Data
                                 [3,1,8, 2,9,5, 6,4,7],
                                 
                                 [9,5,2, 4,7,8, 1,3,6],
-                                [8,4,1, 6,5,3, 2,8,9],
+                                [8,4,1, 6,5,3, 2,7,9],
                                 [6,3,7, 9,2,1, 4,8,5]
                              ]";
 

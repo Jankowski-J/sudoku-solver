@@ -1,7 +1,9 @@
-﻿using SudokuSolver.Lib.Models.Abstract;
+﻿using System.Diagnostics;
+using SudokuSolver.Lib.Models.Abstract;
 
 namespace SudokuSolver.Lib.Models
 {
+    [DebuggerDisplay("{" + nameof(IsSuccess) + ("}, {" + nameof(FilledInCellsCount) + "}"))]
     public class SolvingResult
     {
         public bool IsSuccess { get; set; }

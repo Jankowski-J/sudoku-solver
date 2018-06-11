@@ -56,7 +56,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.True(result.IsSuccess);
         }
-        
+
         [Fact]
         public void Solve_ForEasyGridTwo_ShouldSolveWhole()
         {
@@ -66,7 +66,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridTwoSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForEasyGridThree_ShouldReturnSuccessStatus()
         {
@@ -86,7 +86,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridThreeSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForEasyGridFour_ShouldReturnSuccessStatus()
         {
@@ -106,7 +106,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(easyGrid);
             Assert.Equal(SudokuGrids.EasyGridFourSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForMediumGridOne_ShouldReturnSuccessStatus()
         {
@@ -126,7 +126,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridOneSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForMediumGridTwo_ShouldReturnSuccessStatus()
         {
@@ -146,7 +146,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridTwoSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForMediumGridThree_ShouldReturnSuccessStatus()
         {
@@ -166,7 +166,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridThreeSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForMediumGridFour_ShouldReturnSuccessStatus()
         {
@@ -186,7 +186,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(mediumGrid);
             Assert.Equal(SudokuGrids.MediumGridFourSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForHardGridOne_ShouldReturnSuccessStatus()
         {
@@ -206,7 +206,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(hardGrid);
             Assert.Equal(SudokuGrids.HardGridOneSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void Solve_ForHardGridTwo_ShouldReturnSuccessStatus()
         {
@@ -226,7 +226,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(hardGrid);
             Assert.Equal(SudokuGrids.HardGridTwoSolution, result.SudokuGrid);
         }
-        
+
         [Fact(Skip = "Not yet solved")]
         //[Fact]
         public void Solve_ForHardGridThree_ShouldReturnSuccessStatus()
@@ -238,8 +238,7 @@ namespace SudokuSolver.Lib.Tests.Services
             Assert.True(result.IsSuccess);
         }
 
-        [Fact(Skip = "Not yet solved")]
-        //[Fact]
+        [Fact]
         public void Solve_ForHardGridThree_ShouldSolveWhole()
         {
             var solver = new SolverService();
@@ -248,7 +247,17 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(hardGrid);
             Assert.Equal(SudokuGrids.HardGridThreeSolution, result.SudokuGrid);
         }
-        
+
+        [Fact]
+        public void Solve_ForPartiallyHardGridThree_ShouldSolveWhole()
+        {
+            var solver = new SolverService();
+            var hardGrid = SudokuGrids.HardGridThreePartiallySolved;
+
+            var result = solver.Solve(hardGrid);
+            Assert.Equal(SudokuGrids.HardGridThreeSolution, result.SudokuGrid);
+        }
+
         [Fact]
         public void Solve_ForHardGridFour_ShouldReturnSuccessStatus()
         {
@@ -268,7 +277,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(hardGrid);
             Assert.Equal(SudokuGrids.HardGridFourSolution, result.SudokuGrid);
         }
-        
+
         [Fact(Skip = "Not yet solved")]
         //[Fact]
         public void Solve_ForExtremeGridOne_ShouldReturnSuccessStatus()
@@ -290,7 +299,7 @@ namespace SudokuSolver.Lib.Tests.Services
             var result = solver.Solve(extremeGrid);
             Assert.Equal(SudokuGrids.ExtremeGridOneSolution, result.SudokuGrid);
         }
-        
+
         [Fact]
         public void SearchForPairsInRow_SpecificCase_ShouldFindPair()
         {
@@ -301,12 +310,12 @@ namespace SudokuSolver.Lib.Tests.Services
                 ContinueSolving = true,
                 Grid = grid
             };
-            
+
             SolverService.SearchForPairsInRows(context);
-            
+
             Assert.True(context.PairFound);
         }
-        
+
         [Fact]
         public void SearchForPairsInSquare_SpecificCase_ShouldFindPair()
         {
@@ -317,12 +326,12 @@ namespace SudokuSolver.Lib.Tests.Services
                 ContinueSolving = true,
                 Grid = grid
             };
-            
+
             SolverService.SearchForPairsInSquares(context);
-            
+
             Assert.True(context.PairFound);
         }
-        
+
         [Fact]
         public void SearchSingleNumbersInSquares_SpecificCase_ShouldCrossOut2InFourthRow()
         {
@@ -333,15 +342,36 @@ namespace SudokuSolver.Lib.Tests.Services
                 ContinueSolving = true,
                 Grid = grid
             };
-            
+
             SolverService.SearchSingleNumbersInSquares(context);
             var updatedGrid = context.Grid;
             var row = updatedGrid.GetRow(3);
             var eigthCell = row.GetCell(7);
             var ninthCell = row.GetCell(8);
-            
+
             Assert.False(eigthCell.CanPutCandidate(2));
             Assert.False(ninthCell.CanPutCandidate(2));
+        }
+
+        [Fact]
+        public void SearchForPairsInSquareColumns_ForPartaillySolvedHardGridThree_ShouldRemovesTwosInFirstSquare()
+        {
+            var grid = SudokuGrids.HardGridThreePartiallySolved;
+
+            var context = new SolvingContext
+            {
+                ContinueSolving = true,
+                Grid = grid
+            };
+
+            var allSquareIndices = new short[] {0, 1, 2};
+            SolverService.SearchForPairsInSquareColumns(context, allSquareIndices);
+            var updatedGrid = context.Grid;
+
+            var firstRow = updatedGrid.GetRow(0);
+            var firstCell = firstRow.GetCell(0);
+
+            Assert.False(firstCell.CanPutCandidate(2));
         }
     }
 }
