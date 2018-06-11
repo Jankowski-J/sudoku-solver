@@ -17,6 +17,6 @@ Each subarray contains 9 numbers, 1 for each cell of a row. '0' means empty fiel
 
 ## Implementation status
 - [x] provide test cases
-- [ ] C#
+- [x] C#
 - [ ] F#
 - [ ] JavaScript
