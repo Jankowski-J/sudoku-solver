@@ -6,7 +6,7 @@ using SudokuSolver.Lib.Models.Abstract;
 
 namespace SudokuSolver.Lib.Models
 {
-    [DebuggerDisplay("{Value} ({X}, {Y})")]
+    [DebuggerDisplay("{Value} ({X}, {Y}) ({GetCandidatesFormat()})")]
     public class Cell : ICell, IComparable<Cell>
     {
         public short Value { get; }
@@ -15,19 +15,14 @@ namespace SudokuSolver.Lib.Models
 
         public short Y { get; }
 
-        private readonly List<short> _availableValues;
+        private readonly List<short> _candidates;
 
         public Cell(short value = 0, short x = -1, short y = -1)
         {
             Value = value;
-            if(Value == 0)
-            {
-                _availableValues = Enumerable.Range(1, 9).Select(r => (short)r).ToList();
-            }
-            else
-            {
-                _availableValues = new List<short>();
-            }
+            _candidates = Value == 0 
+                ? Enumerable.Range(1, 9).Select(r => (short) r).ToList() 
+                : new List<short>();
 
             X = x;
             Y = y;
@@ -72,19 +67,37 @@ namespace SudokuSolver.Lib.Models
             }
         }
 
-        public ICollection<short> GetAvailableValues()
+        public ICollection<short> GetCandidates()
         {
-            return _availableValues.ToList();
+            return _candidates.ToList();
         }
 
-        public bool MakeValueUnavailable(short value)
+        public bool RemoveCandidate(short candidate)
         {
-            return _availableValues.Remove(value);
+            return _candidates.Remove(candidate);
         }
 
-        public int MakeValuesUnavailable(params short[] values)
+        public int RemoveCandidates(params short[] candidates)
         {
-            return _availableValues.RemoveAll(values.Contains);
+            return _candidates.RemoveAll(candidates.Contains);
+        }
+
+        public int RemoveCandidatesExcept(params short[] candidatesToBeUntouched)
+        {
+            var toBeRemoved = GetCandidates()
+                .Where(x => !candidatesToBeUntouched.Contains(x))
+                .ToArray();
+            return RemoveCandidates(toBeRemoved);
+        }
+
+        public bool CanPutCandidate(short candidate)
+        {
+            return _candidates.Contains(candidate);
+        }
+
+        private string GetCandidatesFormat()
+        {
+            return string.Join(",", _candidates);
         }
     }
 }

@@ -100,6 +100,53 @@ namespace SudokuSolver.Lib.Tests.Models
         }
 
         [Fact]
+        public void GetSquaresInRow_ShouldReturnCorrectSquares()
+        {
+            var squares = new List<Square>
+            {
+                new Square(new short[] {0, 0, 0, 9, 0, 0, 0, 0, 8}, 1, 0),
+                new Square(new short[] {5, 6, 0, 4, 0, 3, 0, 2, 1}, 1, 1),
+                new Square(new short[] {4, 0, 0, 0, 0, 7, 0, 0, 0}, 1, 2),
+            };
+
+            var grid = GetEasyGrid();
+            var actualSquares = grid.GetSquaresInRow(1).ToList();
+
+            var allCorrect = squares.Select((square, index) =>
+            {
+                var matchingSquare = actualSquares[index];
+                var areEqual = matchingSquare.SequenceEqual(square);
+                return areEqual;
+            }).All(x => x);
+
+            Assert.True(allCorrect);
+        }
+        
+        [Fact]
+        public void GetSquaresInColumn_ShouldReturnCorrectSquares()
+        {
+            var squares = new List<Square>
+            {
+                new Square(new short[] {6, 0, 0, 0, 5, 0, 0, 0, 0}, 0, 1),
+                new Square(new short[] {5, 6, 0, 4, 0, 3, 0, 2, 1}, 1, 1),
+                new Square(new short[] {0, 0, 0, 0, 9, 0, 0, 0, 2}, 2, 1),
+            };
+
+            var grid = GetEasyGrid();
+            var actualSquares = grid.GetSquaresInColumn(1).ToList();
+
+            var allCorrect = squares.Select((square, index) =>
+            {
+                var matchingSquare = actualSquares[index];
+                var areEqual = matchingSquare.SequenceEqual(square);
+                return areEqual;
+            }).All(x => x);
+
+            Assert.True(allCorrect);
+        }
+
+
+        [Fact]
         public void UpdateCell_ShouldCreateCorrectGrid()
         {
             var rows = new List<Row>

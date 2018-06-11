@@ -15,7 +15,7 @@ namespace SudokuSolver.Lib.Models
         private Column[] _columns;
         private Square[,] _squares;
 
-        protected Grid(short[,] matrix)
+        private Grid(short[,] matrix)
         {
             var length = matrix.GetLength(0);
             var width = matrix.GetLength(1);
@@ -64,12 +64,12 @@ namespace SudokuSolver.Lib.Models
                 _columns[wid] = new Column(context);
             }
 
-            InitializeSquares(sudokuSize);
+            InitializeSquares();
         }
 
-        private void InitializeSquares(short sudokuSize)
+        private void InitializeSquares()
         {
-            var squareSize = sudokuSize / 3;
+            const short squareSize = Consts.SudokuSquareSideSize;
             _squares = new Square[squareSize, squareSize];
             for (var horizontalSide = 0; horizontalSide < squareSize; horizontalSide++)
             {
@@ -84,11 +84,12 @@ namespace SudokuSolver.Lib.Models
                             squareCells.Add(row.GetCell((horizontalSide * squareSize) + x));
                         }
                     }
+
                     var context = new SquareConstructorContext
                     {
-                        Cells =squareCells,
-                        ColumnIndex = (short)horizontalSide,
-                        RowIndex = (short)verticalSide
+                        Cells = squareCells,
+                        ColumnIndex = (short) horizontalSide,
+                        RowIndex = (short) verticalSide
                     };
                     _squares[horizontalSide, verticalSide] = new Square(context);
                 }
@@ -116,15 +117,44 @@ namespace SudokuSolver.Lib.Models
 
         public bool HasEmptyCells()
         {
-            return this.Any(x => x.GetAvailableValues().Any());
+            return this.Any(x => x.GetCandidates().Any());
         }
 
         public ICell GetCellWithLeastAvailableValues()
         {
-            var cells = this.Where(x => x.GetAvailableValues().Any())
-                .OrderBy(x => x.GetAvailableValues().Count)
+            var cells = this.Where(x => x.GetCandidates().Any())
+                .OrderBy(x => x.GetCandidates().Count)
                 .ToList();
-            return cells.First();
+            return cells.FirstOrDefault();
+        }
+
+        public IEnumerable<Square> GetSquares()
+        {
+            return _squares.Cast<Square>();
+        }
+
+        public IEnumerable<Column> GetColumns()
+        {
+            return _columns.ToList();
+        }
+
+        public IEnumerable<Row> GetRows()
+        {
+            return _rows.ToList();
+        }
+
+        public IEnumerable<Square> GetSquaresInRow(int rowIndex)
+        {
+            yield return _squares[rowIndex, 0];
+            yield return _squares[rowIndex, 1];
+            yield return _squares[rowIndex, 2];
+        }
+
+        public IEnumerable<Square> GetSquaresInColumn(int columnIndex)
+        {
+            yield return _squares[0, columnIndex];
+            yield return _squares[1, columnIndex];
+            yield return _squares[2, columnIndex];
         }
 
         public Row GetRow(int index)
@@ -167,7 +197,7 @@ namespace SudokuSolver.Lib.Models
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((Grid) obj);
         }
 

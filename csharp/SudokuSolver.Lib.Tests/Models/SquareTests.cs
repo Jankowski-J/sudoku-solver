@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SudokuSolver.Lib.Common;
 using SudokuSolver.Lib.Models;
 using Xunit;
 
@@ -29,7 +30,7 @@ namespace SudokuSolver.Lib.Tests.Models
             foreach (var num in nums)
             {
                 var indexOf = nums.IndexOf(num);
-                var matchingNumber = square.GetCell(indexOf % 3, indexOf / 3).Value;
+                var matchingNumber = square.GetCell(indexOf % Consts.SudokuSquareSideSize, indexOf / Consts.SudokuSquareSideSize).Value;
 
                 Assert.Equal(num, matchingNumber);
             }

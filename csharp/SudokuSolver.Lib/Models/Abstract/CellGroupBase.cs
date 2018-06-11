@@ -7,7 +7,7 @@ using SudokuSolver.Lib.Models.Contexts;
 
 namespace SudokuSolver.Lib.Models.Abstract
 {
-    public abstract class CellGroupBase<T> : IEnumerable<ICell> where T : ICellGroupConstructorContext
+    public abstract class CellGroupBase<T> : ICellGroup where T : ICellGroupConstructorContext
     {
         protected IList<ICell> Cells;
 
@@ -16,7 +16,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             ValidateContext(context);
         }
 
-        protected static void ValidateContext(T context)
+        private static void ValidateContext(T context)
         {
             var hasValues = context.Values != null && context.Values.Any();
             var hasValuesOrCells = hasValues || (context.Cells != null && context.Cells.Any());
@@ -36,7 +36,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             }
         }
 
-        protected static void ValidateValues(ICollection<short> values)
+        private static void ValidateValues(ICollection<short> values)
         {
             if (values == null || !values.Any())
                 throw new ArgumentException("Non-empty collection is required", nameof(values));
@@ -61,7 +61,7 @@ namespace SudokuSolver.Lib.Models.Abstract
             var cell = new Cell(cellValue, x, y);
             if (cellValue == 0)
             {
-                cell.MakeValuesUnavailable(allValues.Where(c => c > 0).ToArray());
+                cell.RemoveCandidates(allValues.Where(c => c > 0).ToArray());
             }
 
             return cell;
@@ -98,7 +98,7 @@ namespace SudokuSolver.Lib.Models.Abstract
         {
             foreach (var cell in cells)
             {
-                cell.MakeValuesUnavailable(context.Cells.Select(x => x.Value).ToArray());
+                cell.RemoveCandidates(context.Cells.Select(x => x.Value).ToArray());
             }
         }
     }

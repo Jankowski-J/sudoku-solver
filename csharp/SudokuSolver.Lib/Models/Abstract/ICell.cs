@@ -8,8 +8,10 @@ namespace SudokuSolver.Lib.Models.Abstract
         short Value { get; }
         short X { get; }
         short Y { get; }
-        ICollection<short> GetAvailableValues();
-        bool MakeValueUnavailable(short value);
-        int MakeValuesUnavailable(params short[] values);
+        ICollection<short> GetCandidates();
+        bool RemoveCandidate(short candidate);
+        int RemoveCandidates(params short[] candidates);
+        int RemoveCandidatesExcept(params short[] candidatesToBeUntouched);
+        bool CanPutCandidate(short candidate);
     }
 }

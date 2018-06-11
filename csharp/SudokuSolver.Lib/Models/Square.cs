@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SudokuSolver.Lib.Common;
 using SudokuSolver.Lib.Models.Abstract;
 using SudokuSolver.Lib.Models.Contexts;
 
@@ -25,20 +26,20 @@ namespace SudokuSolver.Lib.Models
 
         public ICell GetCell(int column, int row)
         {
-            return Cells[row * 3 + column];
+            return Cells[row * Consts.SudokuSquareSideSize + column];
         }
 
         protected override IList<ICell> InitializeCells(SquareConstructorContext context)
         {
             IList<ICell> cells;
-            var rowIndex = (short)(context.RowIndex * 3);
-            var columnIndex = (short)(context.ColumnIndex * 3);
+            var rowIndex = (short)(context.RowIndex * Consts.SudokuSquareSideSize);
+            var columnIndex = (short)(context.ColumnIndex * Consts.SudokuSquareSideSize);
             if (context.Values.Any())
             {
                 cells = context.Values
                     .Select((value, index) =>
-                        CreateCell(context.Values, value, (short) (index % 3 + columnIndex),
-                            (short) (index / 3 + rowIndex)))
+                        CreateCell(context.Values, value, (short) (index % Consts.SudokuSquareSideSize + columnIndex),
+                            (short) (index / Consts.SudokuSquareSideSize + rowIndex)))
                     .ToList();
             }
             else
@@ -53,18 +54,6 @@ namespace SudokuSolver.Lib.Models
         public bool Equals(Square other)
         {
             return this.SequenceEqual(other);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj is Square && Equals((Square) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
         }
     }
 }
