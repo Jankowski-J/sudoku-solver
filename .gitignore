@@ -4,3 +4,5 @@
 /csharp/SudokuSolver.Lib.Tests/obj
 /csharp/SudokuSolver.Lib.Tests/bin
 /csharp/.idea/.idea.SudokuSolver/.idea/workspace.xml
+/csharp/**/bin
+/csharp/**/obj
