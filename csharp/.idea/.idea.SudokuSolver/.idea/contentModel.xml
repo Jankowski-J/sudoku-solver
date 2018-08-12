@@ -62,6 +62,7 @@
       </e>
       <e p="SudokuSolver.Lib.FSharp.Tests" t="IncludeRecursive">
         <e p="bin" t="ExcludeRecursive" />
+        <e p="FactoryTests.fs" t="Include" />
         <e p="obj" t="ExcludeRecursive" />
         <e p="Program.fs" t="Include" />
         <e p="SudokuSolver.Lib.FSharp.Tests.fsproj" t="IncludeRecursive" />
