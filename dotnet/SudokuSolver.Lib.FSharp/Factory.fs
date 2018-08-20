@@ -18,14 +18,17 @@ module Factory =
             |> Seq.except excludedCandidates 
             |> Seq.toArray
             
-        {value = 0y; candidates = candidates }
+        {value = 0y; candidates = candidates }        
+    
         
     let createGrid (cells: int8[, ]) =
-        let durr = Array2D.init<SudokuCell> 9 9 (fun i j -> createCell(cells.[i, j]))
-        //let empty: SudokuGrid[, ] = Array2D.init (cells.GetLength(0) ,cells.GetLength(1), (fun v -> None))
-        let gridCells = 
-            cells
-            |> Array2D.map (fun v -> createCell(v)) 
+        let cellFactory (i: int)(j: int)(c: int8[,]) =
+            let value = c.[i, j]           
+            match value with 
+            | 0y -> createEmptyCell(Commons.row j c |> Seq.append (Commons.col i c))
+            | x -> createCell(x)
+            
+        let gridCells = Array2D.init<SudokuCell> 9 9 (fun i j -> (cellFactory i j cells))
             
         let grid: Models.SudokuGrid = { cells = gridCells }
         

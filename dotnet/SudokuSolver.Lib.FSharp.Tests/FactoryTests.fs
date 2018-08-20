@@ -6,7 +6,7 @@ open SudokuSolver.Lib.FSharp
 open System
 open Xunit
 
-let compareSequences = Seq.compareWith Operators.compare
+let compareSequences = CommonTests.compareSequences
 
 [<Fact>]
 let ``Cell initialized with non-zero value should have correct value``() =
@@ -68,21 +68,21 @@ let ``Creating empty cell should properly assing candidates``() =
     Assert.Equal(0y, cell.value)
     Assert.True(candidatesAreTheSame)
 
-[<Fact(Skip = "Not yet implemented")>]
+[<Fact>]
 let ``createGrid should correctly assign candidates``() =
     let raw = @"[
-                                              [0,2,0, 6,0,0, 0,7,0],
-                                              [0,0,0, 0,5,0, 9,0,1],
-                                              [0,7,9, 0,0,0, 5,0,0],
+                  [0,2,0, 6,0,0, 0,7,0],
+                  [0,0,0, 0,5,0, 9,0,1],
+                  [0,7,9, 0,0,0, 5,0,0],
+                  
+                  [0,0,0, 5,6,0, 4,0,0],
+                  [9,0,0, 4,0,3, 0,0,7],
+                  [0,0,8, 0,2,1, 0,0,0],
               
-                                              [0,0,0, 5,6,0, 4,0,0],
-                                              [9,0,0, 4,0,3, 0,0,7],
-                                              [0,0,8, 0,2,1, 0,0,0],
-              
-                                              [0,0,7, 0,0,0, 1,3,0],
-                                              [6,0,3, 0,9,0, 0,0,0],
-                                              [0,1,0, 0,0,2, 0,8,0]
-                                           ]"
+                  [0,0,7, 0,0,0, 1,3,0],
+                  [6,0,3, 0,9,0, 0,0,0],
+                  [0,1,0, 0,0,2, 0,8,0]
+                ]"
     let deserialized = JsonConvert.DeserializeObject<int8 [,]>(raw)
     let grid = Factory.createGrid deserialized
     let actual = grid.cells.[0, 0]
