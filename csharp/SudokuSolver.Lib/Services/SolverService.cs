@@ -267,17 +267,7 @@ namespace SudokuSolver.Lib.Services
                 foreach (var number in sudokuNumbers)
                 {
                     var availableColumns = squaresInColumn
-                        .Select((x, i) => new NumberInColumn
-                        {
-                            Value = number,
-                            Columns =
-                                x.Where(c => c.CanPutCandidate(number))
-                                    .Select(c => c.X)
-                                    .Distinct()
-                                    .OrderBy(c => c)
-                                    .ToList(),
-                            RowIndex = (short) i
-                        })
+                        .Select((x, i) => ToNumberInColumn(number, x, i))
                         .Where(x => x.Columns.Count == 2)
                         .ToList();
 
@@ -310,6 +300,21 @@ namespace SudokuSolver.Lib.Services
                     }
                 }
             }
+        }
+
+        private static NumberInColumn ToNumberInColumn(short number, Square x, int i)
+        {
+            return new NumberInColumn
+            {
+                Value = number,
+                Columns =
+                    x.Where(c => c.CanPutCandidate(number))
+                        .Select(c => c.X)
+                        .Distinct()
+                        .OrderBy(c => c)
+                        .ToList(),
+                RowIndex = (short) i
+            };
         }
 
         private static void SearchForPairsInSquareRows(SolvingContext context, short[] allSquareIndices)
