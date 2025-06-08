@@ -152,6 +152,14 @@ public class SudokuController : ControllerBase
                 cellBmp.Save(bmpStream, System.Drawing.Imaging.ImageFormat.Png);
 
                 bmpStream.Position = 0;
+
+                var fileStream = System.IO.File.Open($".\\Output\\SudokuOutput_{row}_{col}.png", FileMode.OpenOrCreate);
+                bmpStream.Seek(0, SeekOrigin.Begin);
+                bmpStream.CopyTo(fileStream);
+                fileStream.Close();
+
+                bmpStream.Seek(0, SeekOrigin.Begin);
+
                 using var pix = Pix.LoadFromMemory(bmpStream.ToArray());
                 using var page = ocr.Process(pix);
                 var text = page.GetText().Trim();
