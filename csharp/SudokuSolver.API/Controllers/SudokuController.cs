@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using OpenCvSharp;
@@ -9,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Size = OpenCvSharp.Size;
+using Tesseract;
 
 namespace SudokuSolver.API.Controllers;
 
@@ -67,8 +67,10 @@ public class SudokuController : ControllerBase
             using var src = Cv2.ImDecode(bytes, ImreadModes.Color);
             using var grid = ExtractSudokuGrid(src);
 
-            var resultBytes = grid.ToBytes(".png");
-            return File(resultBytes, "image/png");
+            var cells = SplitGridToCells(grid);
+            var digits = RecognizeDigits(cells);
+
+            return Ok(digits);
         }
         catch (Exception ex)
         {
@@ -130,5 +132,65 @@ public class SudokuController : ControllerBase
         sorted[3] = pts[Array.IndexOf(diff, diff.Max())]; // bottom-left
 
         return sorted;
+    }
+
+    private string[][] RecognizeDigits(Mat[,] cells)
+    {
+        var result = new string[9][];
+        using var ocr = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
+        ocr.SetVariable("tessedit_char_whitelist", "123456789");
+
+        for (int row = 0; row < 9; row++)
+        {
+            result[row] = new string[9];
+            for (int col = 0; col < 9; col++)
+            {
+                var cell = PreprocessCell(cells[row, col]);
+
+                var cellBmp = MatToBitmap(cell);
+                using var bmpStream = new MemoryStream();
+                cellBmp.Save(bmpStream, System.Drawing.Imaging.ImageFormat.Png);
+
+                bmpStream.Position = 0;
+                using var pix = Pix.LoadFromMemory(bmpStream.ToArray());
+                using var page = ocr.Process(pix);
+                var text = page.GetText().Trim();
+                result[row][col] = (text.Length == 1 && char.IsDigit(text[0])) ? text : null;
+            }
+        }
+
+        return result;
+    }
+
+    private Mat PreprocessCell(Mat cell)
+    {
+        var gray = new Mat();
+        Cv2.CvtColor(cell, gray, ColorConversionCodes.BGR2GRAY);
+        Cv2.Resize(gray, gray, new Size(28, 28));
+        Cv2.Threshold(gray, gray, 128, 255, ThresholdTypes.BinaryInv);
+        return gray;
+    }
+
+    private Mat[,] SplitGridToCells(Mat grid)
+    {
+        int cellSize = grid.Width / 9;
+        var cells = new Mat[9, 9];
+
+        for (int row = 0; row < 9; row++)
+        {
+            for (int col = 0; col < 9; col++)
+            {
+                var rect = new OpenCvSharp.Rect(col * cellSize, row * cellSize, cellSize, cellSize);
+                cells[row, col] = new Mat(grid, rect).Clone();
+            }
+        }
+
+        return cells;
+    }
+
+    public static System.Drawing.Bitmap MatToBitmap(Mat mat)
+    {
+        var image = mat.CvtColor(ColorConversionCodes.GRAY2BGR);
+        return OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image);
     }
 }
