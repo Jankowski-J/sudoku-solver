@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Linq;
 
-namespace SudokuSolver.Lib.Extensions
+namespace SudokuSolver.Lib.Extensions;
+
+public static class ArrayExtensions
 {
-    public static class ArrayExtensions
+    // Found here: https://stackoverflow.com/a/26291720
+    public static T[,] To2D<T>(this T[][] source)
     {
-        // Found here: https://stackoverflow.com/a/26291720
-        public static T[,] To2D<T>(this T[][] source)
+        try
         {
-            try
-            {
-                var firstDimension = source.Length;
-                var secondDimension = source.GroupBy(row => row.Length).Single().Key;
+            var firstDimension = source.Length;
+            var secondDimension = source.GroupBy(row => row.Length).Single().Key;
 
-                var result = new T[firstDimension, secondDimension];
-                for (var i = 0; i < firstDimension; ++i)
-                for (var j = 0; j < secondDimension; ++j)
-                    result[i, j] = source[i][j];
+            var result = new T[firstDimension, secondDimension];
+            for (var i = 0; i < firstDimension; ++i)
+            for (var j = 0; j < secondDimension; ++j)
+                result[i, j] = source[i][j];
 
-                return result;
-            }
-            catch (InvalidOperationException)
-            {
-                throw new InvalidOperationException("The given jagged array is not rectangular.");
-            } 
+            return result;
         }
+        catch (InvalidOperationException)
+        {
+            throw new InvalidOperationException("The given jagged array is not rectangular.");
+        } 
     }
 }

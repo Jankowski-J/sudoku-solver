@@ -1,7 +1,6 @@
-namespace SudokuSolver.API.Models
+namespace SudokuSolver.API.Models;
+
+public class SolveSudokuModel
 {
-    public class SolveSudokuModel
-    {
-        public int[][] Cells { get; set; }
-    }
+    public int[][] Cells { get; set; }
 }

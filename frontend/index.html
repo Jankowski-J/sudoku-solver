@@ -84,6 +84,19 @@
     imageInput.addEventListener('change', async (event) => {
       const file = event.target.files[0];
       if (!file) return;
+      
+      var data = new FormData()
+      data.append('file', event.target.files[0]);
+
+      fetch("http://localhost:5000/sudoku/extract-grid", {
+        method: "POST",
+        body: data,
+        headers: {
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+
+      return;
 
       // Pokazanie podglądu
       preview.src = URL.createObjectURL(file);

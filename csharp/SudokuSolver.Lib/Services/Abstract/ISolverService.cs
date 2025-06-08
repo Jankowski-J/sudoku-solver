@@ -1,10 +1,9 @@
 ﻿using SudokuSolver.Lib.Models;
 using SudokuSolver.Lib.Models.Abstract;
 
-namespace SudokuSolver.Lib.Services.Abstract
+namespace SudokuSolver.Lib.Services.Abstract;
+
+public interface ISolverService
 {
-    public interface ISolverService
-    {
-        SolvingResult Solve(IGrid baseGrid);
-    }
+    SolvingResult Solve(IGrid baseGrid);
 }

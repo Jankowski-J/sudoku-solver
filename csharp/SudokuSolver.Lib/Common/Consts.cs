@@ -1,8 +1,7 @@
-﻿namespace SudokuSolver.Lib.Common
+﻿namespace SudokuSolver.Lib.Common;
+
+public static class Consts
 {
-    public static class Consts
-    {
-        public const short SudokuGridSize = 9;
-        public const short SudokuSquareSideSize = 3;
-    }
+    public const short SudokuGridSize = 9;
+    public const short SudokuSquareSideSize = 3;
 }
