@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Rozpoznawanie Sudoku</title>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    #output { margin-top: 20px; white-space: pre-wrap; font-family: monospace; }
+    #preview { max-width: 300px; margin-top: 10px; }
+    #sudoku-grid { display: grid; grid-template-columns: repeat(9, 30px); gap: 2px; margin-top: 20px; }
+    #sudoku-grid input {
+      width: 30px; height: 30px; text-align: center; font-size: 16px;
+    }
+    .error { color: red; font-weight: bold; }
+    button { margin-top: 15px; padding: 6px 12px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>Rozpoznaj Sudoku z Obrazu</h1>
+  <input type="file" accept="image/*" id="imageUpload"><br>
+  <img id="preview" src="#" alt="Podgląd obrazu" style="display: none;">
+  <div id="output">Wynik pojawi się tutaj...</div>
+
+  <canvas id="canvas" width="450" height="450" style="display:none;"></canvas>
+  <div id="sudoku-grid"></div>
+  <button id="downloadJson" style="display: none;">Pobierz JSON</button>
+
+  <script>
+    const imageInput = document.getElementById('imageUpload');
+    const output = document.getElementById('output');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const preview = document.getElementById('preview');
+    const sudokuGrid = document.getElementById('sudoku-grid');
+    const downloadJsonBtn = document.getElementById('downloadJson');
+
+    let currentGrid = [];
+
+    function preprocessCellData(imageData) {
+      const pixels = imageData.data;
+      for (let i = 0; i < pixels.length; i += 4) {
+        const avg = (pixels[i] + pixels[i + 1] + pixels[i + 2]) / 3;
+        const val = avg < 128 ? 0 : 255;
+        pixels[i] = pixels[i + 1] = pixels[i + 2] = val;
+      }
+      return imageData;
+    }
+
+    function displayGrid(grid) {
+      sudokuGrid.innerHTML = '';
+      grid.forEach((row, r) => {
+        row.forEach((cell, c) => {
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.maxLength = 1;
+          input.value = cell !== '.' ? cell : '';
+          input.dataset.row = r;
+          input.dataset.col = c;
+          input.addEventListener('input', () => {
+            const val = input.value;
+            currentGrid[r][c] = /^[1-9]$/.test(val) ? val : '.';
+          });
+          sudokuGrid.appendChild(input);
+        });
+      });
+    }
+
+    function serializeGrid(grid) {
+      return grid.map(row =>
+        row.map(cell => /^[1-9]$/.test(cell) ? parseInt(cell) : null)
+      );
+    }
+
+    downloadJsonBtn.addEventListener('click', () => {
+      const serialized = serializeGrid(currentGrid);
+      const blob = new Blob([JSON.stringify(serialized, null, 2)], { type: 'application/json' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'sudoku.json';
+      link.click();
+    });
+
+    imageInput.addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Pokazanie podglądu
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+
+      img.onload = async () => {
+        canvas.width = 450;
+        canvas.height = 450;
+        ctx.drawImage(img, 0, 0, 450, 450);
+
+        const grid = [];
+        let emptyCells = 0;
+
+        output.textContent = 'Rozpoznawanie... Proszę czekać.';
+        sudokuGrid.innerHTML = '';
+        downloadJsonBtn.style.display = 'none';
+
+        for (let row = 0; row < 9; row++) {
+          const rowData = [];
+          for (let col = 0; col < 9; col++) {
+            const x = col * 50;
+            const y = row * 50;
+            let cellData = ctx.getImageData(x, y, 50, 50);
+            cellData = preprocessCellData(cellData);
+
+            const cellCanvas = document.createElement('canvas');
+            cellCanvas.width = 50;
+            cellCanvas.height = 50;
+            const cellCtx = cellCanvas.getContext('2d');
+            cellCtx.putImageData(cellData, 0, 0);
+
+            try {
+              const result = await Tesseract.recognize(cellCanvas, 'eng', {
+                tessedit_char_whitelist: '123456789'
+              });
+              const text = result.data.text.trim();
+              if (text === '') emptyCells++;
+              rowData.push(text || '.');
+            } catch {
+              rowData.push('.');
+              emptyCells++;
+            }
+          }
+          grid.push(rowData);
+        }
+
+        currentGrid = grid;
+
+        if (emptyCells > 40) {
+          output.innerHTML = '<span class="error">Nie udało się poprawnie odczytać diagramu Sudoku. Upewnij się, że zdjęcie jest wyraźne i dobrze wykadrowane.</span>';
+        } else {
+          output.innerHTML = 'Wyniki OCR (kliknij komórki, aby poprawić):';
+          displayGrid(grid);
+          downloadJsonBtn.style.display = 'inline-block';
+        }
+      };
+    });
+  </script>
+</body>
+</html>
